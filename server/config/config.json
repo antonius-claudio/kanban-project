@@ -1,0 +1,16 @@
+{
+  "development": {
+    "username": "postgres",
+    "password": "postgres",
+    "database": "db_kaban",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "wkikggrdisurcs",
+    "password": "a1d7c728343d54c658b5be4765d1f0396c8f6fa6a24d0d1d11e24380ab015a5f",
+    "database": "dcdccqa032l4f4",
+    "host": "ec2-54-197-48-79.compute-1.amazonaws.com",
+    "dialect": "postgres"
+  }
+}
