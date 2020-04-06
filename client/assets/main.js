@@ -1,4 +1,4 @@
-const url = "http://localhost:3000";
+const url = "https://lit-dawn-18982.herokuapp.com" || "http://localhost:3000";
 $(document).ready(() => {
     console.log(url+'/')
     $.ajax({
