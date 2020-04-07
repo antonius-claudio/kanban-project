@@ -1,0 +1,114 @@
+$background-Main: #346da1;
+$sizing-Border: border-box;
+$paddingBox: 10px;
+$background-Column: #dadadaba;
+$background-Rows: #fff;
+
+* {
+    padding: 0;
+    margin: 0;
+}
+body {
+    background-color: $background-Main;
+}
+
+.container {
+    padding: $paddingBox;
+    box-sizing: $sizing-Border;
+    display: flex;
+    justify-content: space-between;
+
+    .column {
+        padding: $paddingBox;
+        box-sizing: $sizing-Border;
+        width: 33%;
+        background-color: $background-Column;
+
+        .title {
+            font-size: 25px;
+            font-family: sans-serif;
+            margin-bottom: 10px;
+            color: #312f39;
+        }
+
+        .card {
+            box-sizing: $sizing-Border;
+            background-color: $background-Rows;
+            margin-bottom: 10px;
+            padding: $paddingBox;
+            border-radius: 5px;
+
+            .upper {
+                margin-bottom: 10px;
+                font-weight: bold;
+            }
+
+            .bottom {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                .left-bottom {
+                    display: flex;
+
+                    .date, .author {
+                        display: flex;
+                        align-items: flex-end;
+                        
+                        .icon-date {
+                            color: #0674b7ed;
+                        }
+
+                        .icon-author {
+                            color: #df9466;
+                        }
+                    }
+                }
+
+                .right-bottom {
+                    display: flex;
+
+                    .icon-edit {
+                        color: #2fa206;
+                    }
+
+                    .icon-edit:hover {
+                        color: #93cc7e;
+                        cursor: pointer;
+                    }
+
+                    .icon-delete {
+                        color: #c81717;
+                    }
+
+                    .icon-delete:hover {
+                        color: #d55a5a;
+                        cursor: pointer;
+                    }
+
+                    .icon-reorder {
+                        color: #092fa2;
+                    }
+
+                    .icon-reorder:hover {
+                        color: #5e77c1;
+                        cursor: pointer;
+                    }
+
+                    .photo img{
+                        width: 40px;
+                    }
+                }
+
+            }
+        }
+
+        .newForm {
+            input {
+                background-color: #fff0;
+                border: none;
+                font-size: 20px;
+            }
+        }
+    }
+}

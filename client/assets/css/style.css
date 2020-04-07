@@ -1,0 +1,90 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-color: #346da1;
+}
+
+.container {
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+}
+.container .column {
+  padding: 10px;
+  box-sizing: border-box;
+  width: 33%;
+  background-color: #dadadaba;
+}
+.container .column .title {
+  font-size: 25px;
+  font-family: sans-serif;
+  margin-bottom: 10px;
+  color: #312f39;
+}
+.container .column .card {
+  box-sizing: border-box;
+  background-color: #fff;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+.container .column .card .upper {
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+.container .column .card .bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.container .column .card .bottom .left-bottom {
+  display: flex;
+}
+.container .column .card .bottom .left-bottom .date, .container .column .card .bottom .left-bottom .author {
+  display: flex;
+  align-items: flex-end;
+}
+.container .column .card .bottom .left-bottom .date .icon-date, .container .column .card .bottom .left-bottom .author .icon-date {
+  color: #0674b7ed;
+}
+.container .column .card .bottom .left-bottom .date .icon-author, .container .column .card .bottom .left-bottom .author .icon-author {
+  color: #df9466;
+}
+.container .column .card .bottom .right-bottom {
+  display: flex;
+}
+.container .column .card .bottom .right-bottom .icon-edit {
+  color: #2fa206;
+}
+.container .column .card .bottom .right-bottom .icon-edit:hover {
+  color: #93cc7e;
+  cursor: pointer;
+}
+.container .column .card .bottom .right-bottom .icon-delete {
+  color: #c81717;
+}
+.container .column .card .bottom .right-bottom .icon-delete:hover {
+  color: #d55a5a;
+  cursor: pointer;
+}
+.container .column .card .bottom .right-bottom .icon-reorder {
+  color: #092fa2;
+}
+.container .column .card .bottom .right-bottom .icon-reorder:hover {
+  color: #5e77c1;
+  cursor: pointer;
+}
+.container .column .card .bottom .right-bottom .photo img {
+  width: 40px;
+}
+.container .column .newForm input {
+  background-color: #fff0;
+  border: none;
+  font-size: 20px;
+}
+
+/*# sourceMappingURL=style.css.map */
