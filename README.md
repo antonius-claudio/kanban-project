@@ -98,7 +98,7 @@ no needed
 }
 ```
 
-**Response (500 - Internal Server Error)~Failed Save to Database**
+**Response (500 - Internal Server Error)~Failed Read to Database**
 ```
 {
   "message": [
@@ -136,6 +136,226 @@ no needed
 {
   "access_token": "<access token user>",
   "name": "<name user>"
+}
+```
+
+**Response (500 - Internal Server Error)~Failed Read/Save to Database**
+```
+{
+  "message": [
+    "Internal server error"
+  ]
+}
+```
+---
+
+## GET /tasks/
+> get all task (only same organization task)
+
+**Request Header**
+```
+{
+    "access_token": "<access token user>"
+}
+```
+
+**Request Body**
+```
+no needed
+```
+
+**Response (200 - Ok)**
+```
+[
+  {
+    "id": <id task>,
+    "title": "<title task>",
+    "category": "<category task>",
+    "UserId": <id user task>,
+    "createdAt": "<date created task>",
+    "isOwner": <is owner task or not>
+  }
+]
+```
+
+**Response (500 - Internal Server Error)~Failed Read to Database**
+```
+{
+  "message": [
+    "Internal server error"
+  ]
+}
+```
+---
+
+## POST /tasks
+> create new task
+
+**Request Header**
+```
+{
+    "access_token": "<access token user>"
+}
+```
+**Request Body**
+```
+{
+    "title": "<title new task>",
+    "category": "<category new task>"
+}
+```
+
+**Response (200 - Ok)**
+```
+{
+  "id": <id task>,
+  "title": "<title task>",
+  "category": "<category task>",
+  "createdAt": "<date created task>",
+  "UserId": <id creator>
+}
+```
+
+**Response (400 - Bad Request)~Validation Error**
+```
+{
+  "message": [
+    "The task is required!",
+    "The category is required!"
+  ]
+}
+```
+
+**Response (403 -Forbidden)~Don't have token**
+```
+{
+  "message": [
+    "Don't have access"
+  ]
+}
+```
+
+**Response (500 - Internal Server Error)~Failed Save to Database**
+```
+{
+  "message": [
+    "Internal server error"
+  ]
+}
+```
+---
+
+## PUT /tasks/:id
+> update tasks (only owner tasks can update the task)
+
+**Request Header**
+```
+{
+    "access_token": "<access token user>"
+}
+```
+
+**Request Params**
+```
+/:id
+```
+
+**Request Body**
+```
+{
+    "title": "<title task update>",
+    "category": "<category task update>"
+}
+```
+
+**Response (200 - Ok)**
+```
+{
+  "title": "<title task updated>",
+  "category": "<category task updated>"
+}
+```
+
+**Response (400 - Bad Request)~Validation Error**
+```
+{
+  "message": [
+    "The title is required!",
+    "The category is required!"
+  ]
+}
+```
+
+**Response (404 - Not Found)~Task not found**
+```
+{
+  "message": [
+    "Task not found"
+  ]
+}
+```
+
+**Response (401 - Not Authorized)~Other user task**
+```
+{
+  "message": [
+    "Not Authorized!"
+  ]
+}
+```
+
+**Response (500 - Internal Server Error)~Failed Save to Database**
+```
+{
+  "message": [
+    "Internal server error"
+  ]
+}
+```
+---
+
+## DELETE /tasks/:id
+> delete tasks (only owner tasks can delete the task)
+
+**Request Header**
+```
+{
+    "access_token": "<access token user>"
+}
+```
+
+**Request Params**
+```
+/:id
+```
+
+**Request Body**
+```
+no needed
+```
+
+**Response (200 - Ok)**
+```
+{
+  "message": "Deleted successfully!"
+}
+```
+
+**Response (404 - Not Found)~Task not found**
+```
+{
+  "message": [
+    "Task not found"
+  ]
+}
+```
+
+**Response (401 - Not Authorized)~Other user task**
+```
+{
+  "message": [
+    "Not Authorized!"
+  ]
 }
 ```
 
