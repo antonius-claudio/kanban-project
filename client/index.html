@@ -9,12 +9,20 @@
     <!-- Compiled and minified CSS -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <!-- Google oAuth -->
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <meta name="google-signin-client_id" content="934346728491-d6fjbee0o2ljch7l1psmm4uimle5j271.apps.googleusercontent.com">
+    <!-- Custom style -->
     <link rel="stylesheet" href="./assets/css/style.css">
     <title>Kaban</title>
 </head>
 <body>
     <h1>Welcome</h1>
     <p id="testData"></p>
+    <div class="test">
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <button id="btnLogout">logout</button>
+    </div>
     <div class="container">
         <div class="column">
             <div class="title">
@@ -310,6 +318,6 @@
     </div>
     <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script src="./assets/main.js"></script>
+    <script src="./assets/js/main.js"></script>
 </body>
 </html>

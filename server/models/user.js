@@ -36,14 +36,20 @@ module.exports = (sequelize, DataTypes) => {
         notNull: {
           msg: 'The password is required!'
         },
-        notEmpty: 'The password is required!'
+        notEmpty: {
+          msg: 'The password is required!'
+        }
       }
+    },
+    organization: {
+      type: DataTypes.STRING
     }
   }, {
     sequelize,
     hooks: {
-      beforeCreate: (models, option) => {
-        models.password = hash(models.password);
+      beforeCreate: (user, option) => {
+        user.password = hash(user.password);
+        user.organization = 'Hacktiv8';
       }
     }
   });
