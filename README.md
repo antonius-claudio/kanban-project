@@ -107,3 +107,44 @@ no needed
 }
 ```
 ---
+
+## POST /googleSignIn
+> register by OAuth Google when the email has not been registered in the database
+> login by OAuth Google when the email is registered in the database
+
+**Request Header**
+```
+no needed
+```
+**Request Body**
+```
+{
+    "idToken": "<token from google>"
+}
+```
+
+**Response (201 - Created)~register**
+```
+{
+  "access_token": "<access token user>",
+  "name": "<name user>"
+}
+```
+
+**Response (200 - Ok)~login**
+```
+{
+  "access_token": "<access token user>",
+  "name": "<name user>"
+}
+```
+
+**Response (500 - Internal Server Error)~Failed Save to Database**
+```
+{
+  "message": [
+    "Internal server error"
+  ]
+}
+```
+---
