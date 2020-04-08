@@ -26,9 +26,10 @@ class controllerUser {
         .then((result) => {
             let access_token = sign({
                 UserId: result.id,
-                UserEmail: result.email
+                UserEmail: result.email,
+                UserOrganization: result.organization
             });
-            res.status(201).json({access_token, name:result.name});
+            res.status(201).json({access_token, id:result.id, name:result.name});
         })
         .catch((err) => {
             next(err);
@@ -41,10 +42,10 @@ class controllerUser {
             password: req.body.password
         }
         let errors = [];
-        if (form.email === '') {
+        if (form.email === '' || form.email === null) {
             errors.push({message: 'The email is required!'});
         }
-        if (form.password === '') {
+        if (form.password === '' || form.password === null) {
             errors.push({message: 'The password is required!'});
         }
         if (errors.length !== 0) {
@@ -61,9 +62,10 @@ class controllerUser {
                     if (isPassValid) {
                         let access_token = sign({
                             UserId: result.id,
-                            UserEmail: result.email
+                            UserEmail: result.email,
+                            UserOrganization: result.organization
                         });
-                        res.status(200).json({access_token, name:result.name});
+                        res.status(200).json({access_token, id:result.id, name:result.name});
                     } else {
                         throw {msg: 'Wrong Password!', status:401};
                     }
@@ -99,9 +101,10 @@ class controllerUser {
             if (result) {
                 let access_token = sign({
                     UserId: result.id,
-                    UserEmail: result.email
+                    UserEmail: result.email,
+                    UserOrganization: result.organization
                 });
-                res.status(200).json({access_token, name:result.name});
+                res.status(200).json({access_token, id:result.id, name:result.name});
             } else {
                 newUser.password = '1234';
                 return User.create(newUser)
