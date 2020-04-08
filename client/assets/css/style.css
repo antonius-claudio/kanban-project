@@ -4,7 +4,28 @@
 }
 
 body {
-  background-color: #346da1;
+  background-color: #fff;
+}
+
+#app nav {
+  background-color: #84bff299;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-left: 10px;
+}
+#app nav img {
+  width: 40px;
+}
+#app nav ul {
+  list-style-type: none;
+}
+#app nav ul li {
+  padding: 10px;
+}
+#app nav ul li:hover {
+  background-color: #a2a0a08f;
+  cursor: pointer;
 }
 
 .container {

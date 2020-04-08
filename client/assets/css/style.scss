@@ -1,4 +1,4 @@
-$background-Main: #346da1;
+$background-Main: #fff;
 $sizing-Border: border-box;
 $paddingBox: 10px;
 $background-Column: #dadadaba;
@@ -11,7 +11,31 @@ $background-Rows: #fff;
 body {
     background-color: $background-Main;
 }
+#app {
+    nav {
+        background-color: #84bff299;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding-left: 10px;
 
+        img {
+            width: 40px;
+        }
+
+        ul {
+            list-style-type: none;
+            
+            li {
+                padding: 10px;
+            }
+            li:hover {
+                background-color: #a2a0a08f;
+                cursor: pointer;
+            }
+        }
+    }
+}
 .container {
     padding: $paddingBox;
     box-sizing: $sizing-Border;

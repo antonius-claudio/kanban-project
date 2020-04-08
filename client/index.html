@@ -3,317 +3,322 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="icon" href="./assets/logo.png" type="image/gif" sizes="16x16">
+
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <!-- Compiled and minified CSS -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
     <!-- Google oAuth -->
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <meta name="google-signin-client_id" content="934346728491-d6fjbee0o2ljch7l1psmm4uimle5j271.apps.googleusercontent.com">
+
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- production version, optimized for size and speed -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+
     <!-- Custom style -->
     <link rel="stylesheet" href="./assets/css/style.css">
+
     <title>Kaban</title>
 </head>
 <body>
-    <h1>Welcome</h1>
-    <p id="testData"></p>
-    <div class="test">
-        <div class="g-signin2" data-onsuccess="onSignIn"></div>
-        <button id="btnLogout">logout</button>
-    </div>
-    <div class="container">
-        <div class="column">
-            <div class="title">
-                <h5>Backlog</h5>
-            </div>
-            <div class="card">
-                <div class="upper">
-                    Re-UI-Suggested Members
+    <div id="app">
+        <h1>{{message}}</h1>
+        <p v-text="text"></p>
+        <!-- <h1>{{message}}</h1>
+        <p id="testData"></p>
+
+        <div class="test">
+            <div class="g-signin2" data-onsuccess="onSignIn"></div>
+            <button id="btnLogout">logout</button>
+        </div> -->
+        <nav>
+            <img src="./assets/logo.png" alt="">
+            <ul>
+                <li>Logout</li>
+            </ul> 
+        </nav>
+        <div class="container">
+            <div class="column" v-for="category in categories">
+                <div class="title">
+                    <h5>{{message}}</h5>
                 </div>
-                <div class="bottom">
-                    <div class="left-bottom">
-                        <div class="date">
-                            <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
-                        </div>
-                        <div class="author">
-                            <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
-                        </div>
+                <div class="card">
+                    <div class="upper">
+                        Re-UI-Suggested Members
                     </div>
-                    <div class="right-bottom">
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-edit">edit</i>
+                    <div class="bottom">
+                        <div class="left-bottom">
+                            <div class="date">
+                                <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                            </div>
+                            <div class="author">
+                                <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                            </div>
                         </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-delete">delete</i>
+                        <div class="right-bottom">
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-edit">edit</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-delete">delete</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-reorder">swap_horiz</i>
+                            </div>
                         </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-reorder">swap_horiz</i>
-                        </div>
+                        <!-- <div class="photo">
+                            <img src="./assets/logo.png" alt="">
+                        </div> -->
                     </div>
-                    <!-- <div class="photo">
-                        <img src="./assets/logo.png" alt="">
-                    </div> -->
                 </div>
-            </div>
-            <div class="card">
-                <div class="upper">
-                    !!! user profile partial performs query on subscriptions table! (N+1 query)
+                <div class="card">
+                    <div class="upper">
+                        !!! user profile partial performs query on subscriptions table! (N+1 query)
+                    </div>
+                    <div class="bottom">
+                        <div class="left-bottom">
+                            <div class="date">
+                                <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                            </div>
+                            <div class="author">
+                                <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                            </div>
+                        </div>
+                        <div class="right-bottom">
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-edit">edit</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-delete">delete</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-reorder">swap_horiz</i>
+                            </div>
+                        </div>
+                        <!-- <div class="photo">
+                            <img src="./assets/logo.png" alt="">
+                        </div> -->
+                    </div>
                 </div>
-                <div class="bottom">
-                    <div class="left-bottom">
-                        <div class="date">
-                            <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
-                        </div>
-                        <div class="author">
-                            <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
-                        </div>
+                <div class="card">
+                    <div class="upper">
+                        Code Cheese
                     </div>
-                    <div class="right-bottom">
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-edit">edit</i>
+                    <div class="bottom">
+                        <div class="left-bottom">
+                            <div class="date">
+                                <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                            </div>
+                            <div class="author">
+                                <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                            </div>
                         </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-delete">delete</i>
+                        <div class="right-bottom">
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-edit">edit</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-delete">delete</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-reorder">swap_horiz</i>
+                            </div>
                         </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-reorder">swap_horiz</i>
-                        </div>
+                        <!-- <div class="photo">
+                            <img src="./assets/logo.png" alt="">
+                        </div> -->
                     </div>
-                    <!-- <div class="photo">
-                        <img src="./assets/logo.png" alt="">
-                    </div> -->
                 </div>
-            </div>
-            <div class="card">
-                <div class="upper">
-                    Code Cheese
-                </div>
-                <div class="bottom">
-                    <div class="left-bottom">
-                        <div class="date">
-                            <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
-                        </div>
-                        <div class="author">
-                            <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
-                        </div>
-                    </div>
-                    <div class="right-bottom">
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-edit">edit</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-delete">delete</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-reorder">swap_horiz</i>
-                        </div>
-                    </div>
-                    <!-- <div class="photo">
-                        <img src="./assets/logo.png" alt="">
-                    </div> -->
-                </div>
-            </div>
-            <div class="newForm">
-                <form>
-                    <input type="text" placeholder="add new card ..">
-                </form>
-            </div>
-        </div>
-        <div class="column">
-            <div class="title">
-                <h5>Product</h5>
-            </div>
-            <div class="card">
-                <div class="upper">
-                    Re-UI-Suggested Members
-                </div>
-                <div class="bottom">
-                    <div class="left-bottom">
-                        <div class="date">
-                            <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
-                        </div>
-                        <div class="author">
-                            <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
-                        </div>
-                    </div>
-                    <div class="right-bottom">
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-edit">edit</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-delete">delete</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-reorder">swap_horiz</i>
-                        </div>
-                    </div>
-                    <!-- <div class="photo">
-                        <img src="./assets/logo.png" alt="">
-                    </div> -->
+                <div class="newForm">
+                    <form>
+                        <input type="text" placeholder="add new card ..">
+                    </form>
                 </div>
             </div>
-            <div class="card">
-                <div class="upper">
-                    !!! user profile partial performs query on subscriptions table! (N+1 query)
+            <!-- <div class="column">
+                <div class="title">
+                    <h5>Product</h5>
                 </div>
-                <div class="bottom">
-                    <div class="left-bottom">
-                        <div class="date">
-                            <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                <div class="card">
+                    <div class="upper">
+                        Re-UI-Suggested Members
+                    </div>
+                    <div class="bottom">
+                        <div class="left-bottom">
+                            <div class="date">
+                                <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                            </div>
+                            <div class="author">
+                                <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                            </div>
                         </div>
-                        <div class="author">
-                            <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                        <div class="right-bottom">
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-edit">edit</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-delete">delete</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-reorder">swap_horiz</i>
+                            </div>
                         </div>
                     </div>
-                    <div class="right-bottom">
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-edit">edit</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-delete">delete</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-reorder">swap_horiz</i>
-                        </div>
-                    </div>
-                    <!-- <div class="photo">
-                        <img src="./assets/logo.png" alt="">
-                    </div> -->
                 </div>
-            </div>
-            <div class="card">
-                <div class="upper">
-                    Code Cheese
+                <div class="card">
+                    <div class="upper">
+                        !!! user profile partial performs query on subscriptions table! (N+1 query)
+                    </div>
+                    <div class="bottom">
+                        <div class="left-bottom">
+                            <div class="date">
+                                <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                            </div>
+                            <div class="author">
+                                <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                            </div>
+                        </div>
+                        <div class="right-bottom">
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-edit">edit</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-delete">delete</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-reorder">swap_horiz</i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="bottom">
-                    <div class="left-bottom">
-                        <div class="date">
-                            <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                <div class="card">
+                    <div class="upper">
+                        Code Cheese
+                    </div>
+                    <div class="bottom">
+                        <div class="left-bottom">
+                            <div class="date">
+                                <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                            </div>
+                            <div class="author">
+                                <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                            </div>
                         </div>
-                        <div class="author">
-                            <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                        <div class="right-bottom">
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-edit">edit</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-delete">delete</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-reorder">swap_horiz</i>
+                            </div>
                         </div>
                     </div>
-                    <div class="right-bottom">
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-edit">edit</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-delete">delete</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-reorder">swap_horiz</i>
-                        </div>
-                    </div>
-                    <!-- <div class="photo">
-                        <img src="./assets/logo.png" alt="">
-                    </div> -->
                 </div>
-            </div>
-            <div class="newForm">
-                <form>
-                    <input type="text" placeholder="add new card ..">
-                </form>
-            </div>
-        </div>
-        <div class="column">
-            <div class="title">
-                <h5>Development</h5>
-            </div>
-            <div class="card">
-                <div class="upper">
-                    Re-UI-Suggested Members
-                </div>
-                <div class="bottom">
-                    <div class="left-bottom">
-                        <div class="date">
-                            <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
-                        </div>
-                        <div class="author">
-                            <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
-                        </div>
-                    </div>
-                    <div class="right-bottom">
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-edit">edit</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-delete">delete</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-reorder">swap_horiz</i>
-                        </div>
-                    </div>
-                    <!-- <div class="photo">
-                        <img src="./assets/logo.png" alt="">
-                    </div> -->
+                <div class="newForm">
+                    <form>
+                        <input type="text" placeholder="add new card ..">
+                    </form>
                 </div>
             </div>
-            <div class="card">
-                <div class="upper">
-                    !!! user profile partial performs query on subscriptions table! (N+1 query)
+            <div class="column">
+                <div class="title">
+                    <h5>Development</h5>
                 </div>
-                <div class="bottom">
-                    <div class="left-bottom">
-                        <div class="date">
-                            <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                <div class="card">
+                    <div class="upper">
+                        Re-UI-Suggested Members
+                    </div>
+                    <div class="bottom">
+                        <div class="left-bottom">
+                            <div class="date">
+                                <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                            </div>
+                            <div class="author">
+                                <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                            </div>
                         </div>
-                        <div class="author">
-                            <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                        <div class="right-bottom">
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-edit">edit</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-delete">delete</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-reorder">swap_horiz</i>
+                            </div>
                         </div>
                     </div>
-                    <div class="right-bottom">
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-edit">edit</i>
+                </div>
+                <div class="card">
+                    <div class="upper">
+                        !!! user profile partial performs query on subscriptions table! (N+1 query)
+                    </div>
+                    <div class="bottom">
+                        <div class="left-bottom">
+                            <div class="date">
+                                <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                            </div>
+                            <div class="author">
+                                <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                            </div>
                         </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-delete">delete</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-reorder">swap_horiz</i>
+                        <div class="right-bottom">
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-edit">edit</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-delete">delete</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-reorder">swap_horiz</i>
+                            </div>
                         </div>
                     </div>
-                    <!-- <div class="photo">
-                        <img src="./assets/logo.png" alt="">
-                    </div> -->
                 </div>
-            </div>
-            <div class="card">
-                <div class="upper">
-                    Code Cheese
-                </div>
-                <div class="bottom">
-                    <div class="left-bottom">
-                        <div class="date">
-                            <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                <div class="card">
+                    <div class="upper">
+                        Code Cheese
+                    </div>
+                    <div class="bottom">
+                        <div class="left-bottom">
+                            <div class="date">
+                                <i class="material-icons tiny icon-date">date_range</i><span>Feb 28</span>
+                            </div>
+                            <div class="author">
+                                <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                            </div>
                         </div>
-                        <div class="author">
-                            <i class="material-icons tiny icon-author">person</i><span>kura-kura@gmail.com</span>
+                        <div class="right-bottom">
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-edit">edit</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-delete">delete</i>
+                            </div>
+                            <div class="icon-action">
+                                <i class="material-icons tiny icon-reorder">swap_horiz</i>
+                            </div>
                         </div>
                     </div>
-                    <div class="right-bottom">
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-edit">edit</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-delete">delete</i>
-                        </div>
-                        <div class="icon-action">
-                            <i class="material-icons tiny icon-reorder">swap_horiz</i>
-                        </div>
-                    </div>
-                    <!-- <div class="photo">
-                        <img src="./assets/logo.png" alt="">
-                    </div> -->
                 </div>
-            </div>
-            <div class="newForm">
-                <form>
-                    <input type="text" placeholder="add new card ..">
-                </form>
-            </div>
+                <div class="newForm">
+                    <form>
+                        <input type="text" placeholder="add new card ..">
+                    </form>
+                </div>
+            </div> -->
         </div>
     </div>
     <!-- Compiled and minified JavaScript -->

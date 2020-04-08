@@ -31,19 +31,62 @@ $('#btnLogout').click(() => {
     });
 })
   
+var app = new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello Vue!',
+      categories: ['Backlog', 'Todo', 'Done', 'Completed'],
+      tasks: [
+            {
+                id:1,
+                title:'ikan',
+                category: this.category[0],
+                user: 'anto1',
+                createdAt: '2020-04-19',
+                isOwner: true
+            },
+            {
+                id:2,
+                title:'ikan2',
+                category: this.category[1],
+                user: 'anto2',
+                createdAt: '2020-04-21',
+                isOwner: false
+            },
+            {
+                id:3,
+                title:'ikan3',
+                category: this.category[2],
+                user: 'anto3',
+                createdAt: '2020-04-22',
+                isOwner: true
+            },
+            {
+                id:4,
+                title:'ikan4',
+                category: this.category[3],
+                user: 'anto4',
+                createdAt: '2020-04-23',
+                isOwner: false
+            }
+      ]
+    }
+})
 
 $(document).ready(() => {
-    console.log(url+'/')
-    $.ajax({
-        url: url+'/',
-        method: 'GET'
-    })
-    .done((result) => {
-        $('#testData').append(`
-            ${result.message}
-        `);
-    })
-    .catch((err) => {
-        M.toast({html: JSON.stringify(err)});
-    })
+    console.log('aap')
+    app;
+    // console.log(url+'/')
+    // $.ajax({
+    //     url: url+'/',
+    //     method: 'GET'
+    // })
+    // .done((result) => {
+    //     $('#testData').append(`
+    //         ${result.message}
+    //     `);
+    // })
+    // .catch((err) => {
+    //     M.toast({html: JSON.stringify(err)});
+    // })
 })
