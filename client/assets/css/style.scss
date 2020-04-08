@@ -10,6 +10,7 @@ $background-Rows: #fff;
 }
 body {
     background-color: $background-Main;
+    width: 100%;
 }
 #app {
     nav {
@@ -40,12 +41,12 @@ body {
     padding: $paddingBox;
     box-sizing: $sizing-Border;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
 
     .column {
         padding: $paddingBox;
         box-sizing: $sizing-Border;
-        width: 33%;
+        width: 24.5%;
         background-color: $background-Column;
 
         .title {

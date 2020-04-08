@@ -5,6 +5,7 @@
 
 body {
   background-color: #fff;
+  width: 100%;
 }
 
 #app nav {
@@ -32,12 +33,12 @@ body {
   padding: 10px;
   box-sizing: border-box;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 .container .column {
   padding: 10px;
   box-sizing: border-box;
-  width: 33%;
+  width: 24.5%;
   background-color: #dadadaba;
 }
 .container .column .title {
