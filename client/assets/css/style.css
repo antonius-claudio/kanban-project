@@ -8,24 +8,14 @@ body {
   width: 100%;
 }
 
-#app nav {
-  background-color: #84bff299;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding-left: 10px;
-}
 #app nav img {
-  width: 40px;
-}
-#app nav ul {
-  list-style-type: none;
+  width: 60px;
 }
 #app nav ul li {
-  padding: 10px;
+  padding: 0 10px;
 }
 #app nav ul li:hover {
-  background-color: #a2a0a08f;
+  background-color: #48282870;
   cursor: pointer;
 }
 
@@ -103,10 +93,35 @@ body {
 .container .column .card .bottom .right-bottom .photo img {
   width: 40px;
 }
-.container .column .newForm input {
-  background-color: #fff0;
-  border: none;
-  font-size: 20px;
+.container .column .newForm {
+  padding: 5px;
+  background-color: #f2c798db;
+  border-radius: 5px;
+}
+.container .column .newForm .input-field input {
+  color: #4f4242;
+}
+.container .column .newForm .input-field label {
+  color: #4f4242;
+}
+.container .column .newForm .s6 {
+  margin-top: 0;
+  margin-bottom: 0;
+  text-align: center;
+}
+.container .column .newForm .btnFormTask {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+.container .column .newForm .btnFormTask:hover {
+  cursor: pointer;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+.own {
+  background-color: #fff3d1f0 !important;
 }
 
 /*# sourceMappingURL=style.css.map */

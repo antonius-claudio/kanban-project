@@ -5,6 +5,7 @@ function authentication(req, res, next) {
         let decoded = verify(req.headers.access_token);
         req.UserId = decoded.UserId;
         req.UserEmail = decoded.UserEmail;
+        req.UserOrganization = decoded.UserOrganization;
         next();
     } else {
         throw {msg: `Don't have access`, status: 403};

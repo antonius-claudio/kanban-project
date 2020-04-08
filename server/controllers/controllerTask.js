@@ -4,40 +4,36 @@ class controllerTask {
 
     static getAll(req, res, next) {
         let UserId = req.UserId;
-        let organization = null;
-        User.findByPk(UserId)
-        .then((result) => {
-            organization = result.organization;
-            return Task.findAll({
-                        include: [
-                            {
-                                model: User,
-                                where: {
-                                    organization
-                                }
-                            }
-                        ]
-                    })
+        let organization = req.UserOrganization;
+        Task.findAll({
+            include: [
+                {
+                    model: User,
+                    where: {
+                        organization
+                    }
+                }
+            ]
         })
         .then((result) => {
-            let temp = [];
-            result.forEach(i => {
-                let obj = {
-                    id: i.id,
-                    title: i.title,
-                    category: i.category,
-                    UserId: i.UserId,
-                    organization: i.organization,
-                    createdAt: i.createdAt
-                };
-                if (i.User.id === UserId) {
-                    obj.isOwner = true;
-                } else {
-                    obj.isOwner = false;
-                }
-                temp.push(obj);
-            })
-            res.status(200).json(temp);
+            // let temp = [];
+            // result.forEach(i => {
+            //     let obj = {
+            //         id: i.id,
+            //         title: i.title,
+            //         category: i.category,
+            //         UserName: i.User.name,
+            //         organization: i.organization,
+            //         createdAt: i.createdAt
+            //     };
+            //     if (i.User.id === UserId) {
+            //         obj.isOwner = true;
+            //     } else {
+            //         obj.isOwner = false;
+            //     }
+            //     temp.push(obj);
+            // })
+            res.status(200).json(result);
         })
         .catch((err) => {
             next(err);
