@@ -5,19 +5,13 @@ var app = new Vue({
     el: '#app',
     data: {
         isLogin: false,
+        isNew: false,
         UserId: null,
         emailLogin: '',
         passwordLogin: '',
         categories: ['Backlog', 'Todo', 'Done', 'Completed'],
         tasks: null,
-        newTaskBacklog: '',
-        newTaskTodo: '',
-        newTaskDone: '',
-        newTaskCompleted: '',
-        isPushedBacklog: false,
-        isPushedTodo: false,
-        isPushedDone: false,
-        isPushedCompleted: false,
+        showDiv: false
     },
     methods: {
         loginForm: function () {
@@ -31,6 +25,42 @@ var app = new Vue({
             })
             .then((response) => {
                 this.isLogin = true;
+                this.UserId = response.data.id;
+                this.emailLogin = '';
+                this.passwordLogin = '';
+                localStorage.setItem('access_token', response.data.access_token);
+                localStorage.setItem('id', response.data.id);
+                localStorage.setItem('name', response.data.name);
+            })
+            .catch(err => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: err.response.data.message,
+                    showClass: {
+                      popup: 'animated fadeInDown faster'
+                    },
+                    hideClass: {
+                      popup: 'animated fadeOutUp faster'
+                    }
+                })
+            })
+        },
+        registerForm: function () {
+            axios({
+                url: url + '/register',
+                method: 'POST',
+                data: {
+                    name: this.nameRegister,
+                    email: this.emailRegister,
+                    password: this.passwordRegister
+                }
+            })
+            .then((response) => {
+                this.isLogin = true;
+                this.emailRegister = '';
+                this.emailRegister = '';
+                this.passwordRegister = '';
                 this.UserId = response.data.id;
                 localStorage.setItem('access_token', response.data.access_token);
                 localStorage.setItem('id', response.data.id);
@@ -181,23 +211,18 @@ var app = new Vue({
             localStorage.removeItem('access_token');
             localStorage.removeItem('id');
             localStorage.removeItem('name');
-            this.emailLogin = '';
             this.UserId = null;
+            this.emailLogin = '';
             this.passwordLogin = '';
+            this.nameRegister = '';
+            this.emailRegister = '';
+            this.passwordRegister = '';
             this.categories = ['Backlog', 'Todo', 'Done', 'Completed'];
             this.tasks = null;
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
             console.log('User signed out.');
             });
-        },
-        // categories: ['Backlog', 'Todo', 'Done', 'Completed'],
-        formTask: function (category) {
-            if (category === 'Backlog') {
-                isPushedBacklog = true;
-                console.log('masuk bak', isPushedBacklog)
-            }
-            // this.isPushed_Backlog = true;
         },
         createTask: function(category) {
             // axios({
@@ -210,13 +235,21 @@ var app = new Vue({
             console.log('masuk sini')
             console.log(category)
         },
-        cancelTask: function() {
-            console.log('masuk cancel')
-            this.newTask = '';
+        toggleDiv: function(){
+            console.log('masuk sini, showDiv:', this.showDiv)
+            this.showDiv = !this.showDiv;
+            console.log('setelah toggle, showDivv:', this.showDiv)
+        },
+        loadFormRegister: function(){
+            console.log('sini')
+            this.isNew = !this.isNew;
         }
     },
     created() {
         this.getTaks();
+        if (localStorage.getItem('access_token')) {
+            this.isLogin = true;
+        }
     },
     computed: {
         checkSame: function (value1, value2) {
@@ -224,18 +257,15 @@ var app = new Vue({
         }
     },
     watch: {
-        isLogin: function(val, oldVal) {
-            if (val) {
-                console.log('masuk refresh')
-                isLogin = true;
-                this.getTaks();
-            } else {
-                console.log('masuk gagal refresh')
-                isLogin = false;
-            }
-        },
-        isPushed: function(val, oldVal) {
-
-        }
+        // isLogin: function(val, oldVal) {
+        //     if (val) {
+        //         console.log('masuk refresh')
+        //         isLogin = true;
+        //         this.getTaks();
+        //     } else {
+        //         console.log('masuk gagal refresh')
+        //         isLogin = false;
+        //     }
+        // }
     }
 })
