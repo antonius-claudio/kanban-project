@@ -1,22 +1,21 @@
 <template>
   <div class="row" v-if="isLogin === false">
-      <div class="col s3 offset-s4">
-          <div class="opening">
+      <div class="col s3 offset-s4 martop">
+          <div class="opening formR">
               <form @submit.prevent="loginForm"  v-if="isNew === false">
                   <h4>Login</h4>
                   <div class="input-field col s12">
                       <input type="text" placeholder="email" v-model="emailLogin">
-                      <label>Email</label>
                   </div>
                   <div class="input-field col s12">
                       <input type="password" placeholder="password" v-model="passwordLogin">
-                      <label>Password</label>
                   </div>
                   <div class="input-field col s6">
                       <button type="submit" class="btn">login</button>
                   </div>
                   <div class="input-field col s6">
-                      <div class="g-signin2" v-on:click="googleSign(onSignIn)" data-onsuccess="onSignIn"></div>
+                  <!--<gsigninbutton class="g-signin2" @done="onUserLoggedIn"></gsigninbutton>-->
+                      <div class="g-signin2" data-onsuccess="onSignIn"></div>
                   </div>
                   <div v-on:click="loadFormRegister">
                       Don't have account?
@@ -26,21 +25,18 @@
                   <h4>Register</h4>
                   <div class="input-field col s12">
                       <input type="text" placeholder="name" v-model="nameRegister">
-                      <label>Name</label>
                   </div>
                   <div class="input-field col s12">
                       <input type="text" placeholder="email" v-model="emailRegister">
-                      <label>Email</label>
                   </div>
                   <div class="input-field col s12">
                       <input type="password" placeholder="password" v-model="passwordRegister">
-                      <label>Password</label>
                   </div>
                   <div class="input-field col s6">
                       <button type="submit" class="btn">register</button>
                   </div>
                   <div class="input-field col s6">
-                      <div class="g-signin2" v-on:click="googleSign(onSignIn)" data-onsuccess="onSignIn"></div>
+                      <!--<div class="g-signin2" v-on:click="googleSign(onSignIn)" data-onsuccess="onSignIn"></div>-->
                   </div>
                   <div v-on:click="loadFormRegister">
                       Already have account?
@@ -50,7 +46,7 @@
       </div>
   </div>
 
-  <div class="content" v-else-if="isLogin === true">
+  <div class="content" v-else>
       <nav>
           <div class="nav-wrapper">
               <a href="#" class="brand-logo"><img src="../assets/logo.png" alt=""></a>
@@ -75,11 +71,13 @@
 
 <script>
 import TaskList from './components/TaskList';
+import gsigninbutton from './components/g-signin-button';
 import { url } from './utils.js';
 export default {
   name: "App",
   components: {
-    TaskList
+    TaskList,
+    gsigninbutton
   },
   data() {
     return {
@@ -107,14 +105,14 @@ export default {
                 }
             })
             .then((response) => {
-                this.isLogin = true;
+                this.isLogin = !this.isLogin;
                 this.UserId = response.data.id;
                 this.emailLogin = '';
                 this.passwordLogin = '';
                 localStorage.setItem('access_token', response.data.access_token);
                 localStorage.setItem('id', response.data.id);
                 localStorage.setItem('name', response.data.name);
-                this.getTaks();
+                // this.getTaks();
             })
             .catch(err => {
                 Swal.fire({
@@ -141,7 +139,7 @@ export default {
                 }
             })
             .then((response) => {
-                this.isLogin = true;
+                this.isLogin = !this.isLogin;
                 this.emailRegister = '';
                 this.emailRegister = '';
                 this.passwordRegister = '';
@@ -149,7 +147,7 @@ export default {
                 localStorage.setItem('access_token', response.data.access_token);
                 localStorage.setItem('id', response.data.id);
                 localStorage.setItem('name', response.data.name);
-                this.getTaks();
+                // this.getTaks();
             })
             .catch(err => {
                 Swal.fire({
@@ -186,14 +184,23 @@ export default {
         addedTask: function(payload) {
           this.tasks.push(payload);
         },
-        googleSign: function onSignIn (googleUser) {
-            var profile = googleUser.getBasicProfile();
+        onUserLoggedIn (user) {
+          const profile = user.getBasicProfile();
+          console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+          console.log('Name: ' + profile.getName());
+          console.log('Image URL: ' + profile.getImageUrl());
+          console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+          let idToken = user.getAuthResponse().id_token;
+          console.log('sampai sini');
+        },
+        onSignIn: function (googleUser) {
+            const profile = googleUser.getBasicProfile();
             console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
             console.log('Name: ' + profile.getName());
             console.log('Image URL: ' + profile.getImageUrl());
             console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
             let idToken = googleUser.getAuthResponse().id_token;
-            console.log('sampai sini');
+            console.log(' ononSignIn sampai sini');
             $.ajax({
                 url: url+'/googleSignIn',
                 method: 'POST',
@@ -211,7 +218,7 @@ export default {
         },
         btnLogout: function () {
             console.log('User masuk log out.');
-            this.isLogin = false;
+            this.isLogin = !this.isLogin;
             localStorage.removeItem('access_token');
             localStorage.removeItem('id');
             localStorage.removeItem('name');
@@ -222,7 +229,7 @@ export default {
             this.emailRegister = '';
             this.passwordRegister = '';
             this.categories = ['Backlog', 'Todo', 'Done', 'Completed'];
-            this.tasks = null;
+            this.tasks = [];
             var auth2 = gapi.auth2.getAuthInstance();
             auth2.signOut().then(function () {
             console.log('User signed out.');
@@ -241,33 +248,30 @@ export default {
           this.tasks.splice(temp, 1);
         },
         updateItem: function(payload) {
-          this.tasks.forEach(i => {
-            if(i.id === payload.id) {
-              i.title = payload.title;
-              i.category = payload.category;
-            }
-          })
+            this.tasks.forEach(i => {
+                if(i.id === payload.id) {
+                  i.title = payload.title;
+                  i.category = payload.category;
+                }
+            })
         }
     },
     created() {
         // this.getTaks();
         if (localStorage.getItem('access_token')) {
-          console.log('masuk create app')
-            this.isLogin = true;
+            this.isLogin = !this.isLogin;
             this.UserId = localStorage.getItem('id');
             this.getTaks();
         }
     },
-    computed: {
-        
-    },
     watch: {
         isLogin: function(val, oldVal) {
-            if (localStorage.getItem('id')) {
-                isLogin = true;
+            if (localStorage.getItem('access_token')) {
+                this.isLogin = true;
                 this.getTaks();
+
             } else {
-                isLogin = false;
+                this.isLogin = false;
             }
         }
     }

@@ -8882,6 +8882,18 @@ var _utils = require("../utils.js");
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   name: 'TaskItem',
   props: ['task', 'UserId'],
@@ -8893,7 +8905,8 @@ var _default = {
   data: function data() {
     return {
       isEdit: false,
-      inputUpdateTask: ''
+      inputUpdateTask: '',
+      hover: false
     };
   },
   methods: {
@@ -8911,11 +8924,41 @@ var _default = {
           access_token: localStorage.getItem('access_token')
         }
       }).then(function (response) {
-        console.log('updateee', response.data);
         _this.inputUpdateTask = '';
         _this.isEdit = !_this.isEdit;
 
         _this.$emit('itemUpdatedTask', response.data);
+
+        Swal.fire('Success!', 'You have updated task!', 'success');
+      }).catch(function (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.message,
+          showClass: {
+            popup: 'animated fadeInDown faster'
+          },
+          hideClass: {
+            popup: 'animated fadeOutUp faster'
+          }
+        });
+      });
+    },
+    updateTo: function updateTo(categ) {
+      var _this2 = this;
+
+      axios({
+        url: _utils.url + "/tasks/".concat(this.task.id),
+        method: 'PUT',
+        data: {
+          title: this.task.title,
+          category: categ
+        },
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      }).then(function (response) {
+        _this2.$emit('itemUpdatedTask', response.data);
 
         Swal.fire('Success!', 'You have updated task!', 'success');
       }).catch(function (err) {
@@ -8941,7 +8984,7 @@ var _default = {
       this.isEdit = !this.isEdit;
     },
     deleteTask: function deleteTask() {
-      var _this2 = this;
+      var _this3 = this;
 
       Swal.fire({
         title: 'Are you sure?',
@@ -8954,13 +8997,13 @@ var _default = {
       }).then(function (result) {
         if (result.value) {
           axios({
-            url: _utils.url + "/tasks/".concat(_this2.task.id),
+            url: _utils.url + "/tasks/".concat(_this3.task.id),
             method: 'DELETE',
             headers: {
               access_token: localStorage.getItem('access_token')
             }
           }).then(function (response) {
-            _this2.$emit('itemRemove', _this2.task.id);
+            _this3.$emit('itemRemove', _this3.task.id);
 
             Swal.fire('Deleted!', "".concat(response.data.message), 'success');
           }).catch(function (err) {
@@ -9129,7 +9172,82 @@ exports.default = _default;
               )
             ]),
             _vm._v(" "),
-            _vm._m(1)
+            _c(
+              "span",
+              {
+                on: {
+                  mouseover: function($event) {
+                    _vm.hover = true
+                  },
+                  mouseleave: function($event) {
+                    _vm.hover = false
+                  }
+                }
+              },
+              [
+                _vm._m(1),
+                _vm._v(" "),
+                _vm.hover
+                  ? _c("ul", [
+                      _vm.task.category !== "Backlog"
+                        ? _c(
+                            "li",
+                            {
+                              on: {
+                                click: function($event) {
+                                  return _vm.updateTo("Backlog")
+                                }
+                              }
+                            },
+                            [_vm._v("to backlog")]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.task.category !== "Todo"
+                        ? _c(
+                            "li",
+                            {
+                              on: {
+                                click: function($event) {
+                                  return _vm.updateTo("Todo")
+                                }
+                              }
+                            },
+                            [_vm._v("to todo")]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.task.category !== "Done"
+                        ? _c(
+                            "li",
+                            {
+                              on: {
+                                click: function($event) {
+                                  return _vm.updateTo("Done")
+                                }
+                              }
+                            },
+                            [_vm._v("to done")]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.task.category !== "Completed"
+                        ? _c(
+                            "li",
+                            {
+                              on: {
+                                click: function($event) {
+                                  return _vm.updateTo("Completed")
+                                }
+                              }
+                            },
+                            [_vm._v("to completed")]
+                          )
+                        : _vm._e()
+                    ])
+                  : _vm._e()
+              ]
+            )
           ])
         : _vm._e()
     ])
@@ -9438,7 +9556,76 @@ render._withStripped = true
         
       }
     })();
-},{"./TaskItem":"../src/components/TaskItem.vue","../utils.js":"../src/utils.js","vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/App.vue":[function(require,module,exports) {
+},{"./TaskItem":"../src/components/TaskItem.vue","../utils.js":"../src/utils.js","vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/components/g-signin-button.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+//
+//
+//
+var _default = {
+  name: 'gsigninbutton',
+  mounted: function mounted() {
+    var profile = googleUser.getBasicProfile();
+    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+    this.$emit('done', googleUser);
+  }
+};
+exports.default = _default;
+        var $eca9ad = exports.default || module.exports;
+      
+      if (typeof $eca9ad === 'function') {
+        $eca9ad = $eca9ad.options;
+      }
+    
+        /* template */
+        Object.assign($eca9ad, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { ref: "signinBtn", staticClass: "btn-sign-in" }, [
+    _vm._v("Sign In")
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$eca9ad', $eca9ad);
+          } else {
+            api.reload('$eca9ad', $eca9ad);
+          }
+        }
+
+        
+      }
+    })();
+},{"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/App.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9447,6 +9634,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _TaskList = _interopRequireDefault(require("./components/TaskList"));
+
+var _gSigninButton = _interopRequireDefault(require("./components/g-signin-button"));
 
 var _utils = require("./utils.js");
 
@@ -9523,14 +9712,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-//
-//
-//
-//
 var _default = {
   name: "App",
   components: {
-    TaskList: _TaskList.default
+    TaskList: _TaskList.default,
+    gsigninbutton: _gSigninButton.default
   },
   data: function data() {
     return {
@@ -9559,15 +9745,13 @@ var _default = {
           password: this.passwordLogin
         }
       }).then(function (response) {
-        _this.isLogin = true;
+        _this.isLogin = !_this.isLogin;
         _this.UserId = response.data.id;
         _this.emailLogin = '';
         _this.passwordLogin = '';
         localStorage.setItem('access_token', response.data.access_token);
         localStorage.setItem('id', response.data.id);
-        localStorage.setItem('name', response.data.name);
-
-        _this.getTaks();
+        localStorage.setItem('name', response.data.name); // this.getTaks();
       }).catch(function (err) {
         Swal.fire({
           icon: 'error',
@@ -9594,16 +9778,14 @@ var _default = {
           password: this.passwordRegister
         }
       }).then(function (response) {
-        _this2.isLogin = true;
+        _this2.isLogin = !_this2.isLogin;
         _this2.emailRegister = '';
         _this2.emailRegister = '';
         _this2.passwordRegister = '';
         _this2.UserId = response.data.id;
         localStorage.setItem('access_token', response.data.access_token);
         localStorage.setItem('id', response.data.id);
-        localStorage.setItem('name', response.data.name);
-
-        _this2.getTaks();
+        localStorage.setItem('name', response.data.name); // this.getTaks();
       }).catch(function (err) {
         Swal.fire({
           icon: 'error',
@@ -9639,7 +9821,18 @@ var _default = {
     addedTask: function addedTask(payload) {
       this.tasks.push(payload);
     },
-    googleSign: function onSignIn(googleUser) {
+    onUserLoggedIn: function onUserLoggedIn(user) {
+      var profile = user.getBasicProfile();
+      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+
+      console.log('Name: ' + profile.getName());
+      console.log('Image URL: ' + profile.getImageUrl());
+      console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+      var idToken = user.getAuthResponse().id_token;
+      console.log('sampai sini');
+    },
+    onSignIn: function onSignIn(googleUser) {
       var profile = googleUser.getBasicProfile();
       console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
 
@@ -9648,7 +9841,7 @@ var _default = {
       console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
 
       var idToken = googleUser.getAuthResponse().id_token;
-      console.log('sampai sini');
+      console.log(' ononSignIn sampai sini');
       $.ajax({
         url: _utils.url + '/googleSignIn',
         method: 'POST',
@@ -9664,7 +9857,7 @@ var _default = {
     },
     btnLogout: function btnLogout() {
       console.log('User masuk log out.');
-      this.isLogin = false;
+      this.isLogin = !this.isLogin;
       localStorage.removeItem('access_token');
       localStorage.removeItem('id');
       localStorage.removeItem('name');
@@ -9675,7 +9868,7 @@ var _default = {
       this.emailRegister = '';
       this.passwordRegister = '';
       this.categories = ['Backlog', 'Todo', 'Done', 'Completed'];
-      this.tasks = null;
+      this.tasks = [];
       var auth2 = gapi.auth2.getAuthInstance();
       auth2.signOut().then(function () {
         console.log('User signed out.');
@@ -9705,32 +9898,20 @@ var _default = {
   created: function created() {
     // this.getTaks();
     if (localStorage.getItem('access_token')) {
-      console.log('masuk create app');
-      this.isLogin = true;
+      this.isLogin = !this.isLogin;
       this.UserId = localStorage.getItem('id');
       this.getTaks();
     }
   },
-  computed: {},
   watch: {
-    isLogin: function (_isLogin) {
-      function isLogin(_x, _x2) {
-        return _isLogin.apply(this, arguments);
-      }
-
-      isLogin.toString = function () {
-        return _isLogin.toString();
-      };
-
-      return isLogin;
-    }(function (val, oldVal) {
-      if (localStorage.getItem('id')) {
-        isLogin = true;
+    isLogin: function isLogin(val, oldVal) {
+      if (localStorage.getItem('access_token')) {
+        this.isLogin = true;
         this.getTaks();
       } else {
-        isLogin = false;
+        this.isLogin = false;
       }
-    })
+    }
   }
 };
 exports.default = _default;
@@ -9748,8 +9929,8 @@ exports.default = _default;
   var _c = _vm._self._c || _h
   return _vm.isLogin === false
     ? _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col s3 offset-s4" }, [
-          _c("div", { staticClass: "opening" }, [
+        _c("div", { staticClass: "col s3 offset-s4 martop" }, [
+          _c("div", { staticClass: "opening formR" }, [
             _vm.isNew === false
               ? _c(
                   "form",
@@ -9784,9 +9965,7 @@ exports.default = _default;
                             _vm.emailLogin = $event.target.value
                           }
                         }
-                      }),
-                      _vm._v(" "),
-                      _c("label", [_vm._v("Email")])
+                      })
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "input-field col s12" }, [
@@ -9809,24 +9988,12 @@ exports.default = _default;
                             _vm.passwordLogin = $event.target.value
                           }
                         }
-                      }),
-                      _vm._v(" "),
-                      _c("label", [_vm._v("Password")])
+                      })
                     ]),
                     _vm._v(" "),
                     _vm._m(0),
                     _vm._v(" "),
-                    _c("div", { staticClass: "input-field col s6" }, [
-                      _c("div", {
-                        staticClass: "g-signin2",
-                        attrs: { "data-onsuccess": "onSignIn" },
-                        on: {
-                          click: function($event) {
-                            return _vm.googleSign(_vm.onSignIn)
-                          }
-                        }
-                      })
-                    ]),
+                    _vm._m(1),
                     _vm._v(" "),
                     _c("div", { on: { click: _vm.loadFormRegister } }, [
                       _vm._v(
@@ -9869,9 +10036,7 @@ exports.default = _default;
                             _vm.nameRegister = $event.target.value
                           }
                         }
-                      }),
-                      _vm._v(" "),
-                      _c("label", [_vm._v("Name")])
+                      })
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "input-field col s12" }, [
@@ -9894,9 +10059,7 @@ exports.default = _default;
                             _vm.emailRegister = $event.target.value
                           }
                         }
-                      }),
-                      _vm._v(" "),
-                      _c("label", [_vm._v("Email")])
+                      })
                     ]),
                     _vm._v(" "),
                     _c("div", { staticClass: "input-field col s12" }, [
@@ -9919,24 +10082,12 @@ exports.default = _default;
                             _vm.passwordRegister = $event.target.value
                           }
                         }
-                      }),
-                      _vm._v(" "),
-                      _c("label", [_vm._v("Password")])
-                    ]),
-                    _vm._v(" "),
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "input-field col s6" }, [
-                      _c("div", {
-                        staticClass: "g-signin2",
-                        attrs: { "data-onsuccess": "onSignIn" },
-                        on: {
-                          click: function($event) {
-                            return _vm.googleSign(_vm.onSignIn)
-                          }
-                        }
                       })
                     ]),
+                    _vm._v(" "),
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "input-field col s6" }),
                     _vm._v(" "),
                     _c("div", { on: { click: _vm.loadFormRegister } }, [
                       _vm._v(
@@ -9949,11 +10100,10 @@ exports.default = _default;
           ])
         ])
       ])
-    : _vm.isLogin === true
-    ? _c("div", { staticClass: "content" }, [
+    : _c("div", { staticClass: "content" }, [
         _c("nav", [
           _c("div", { staticClass: "nav-wrapper" }, [
-            _vm._m(2),
+            _vm._m(3),
             _vm._v(" "),
             _c(
               "ul",
@@ -9987,7 +10137,6 @@ exports.default = _default;
           1
         )
       ])
-    : _vm._e()
 }
 var staticRenderFns = [
   function() {
@@ -9998,6 +10147,17 @@ var staticRenderFns = [
       _c("button", { staticClass: "btn", attrs: { type: "submit" } }, [
         _vm._v("login")
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-field col s6" }, [
+      _c("div", {
+        staticClass: "g-signin2",
+        attrs: { "data-onsuccess": "onSignIn" }
+      })
     ])
   },
   function() {
@@ -10049,7 +10209,7 @@ render._withStripped = true
         
       }
     })();
-},{"./components/TaskList":"../src/components/TaskList.vue","./utils.js":"../src/utils.js","./../assets/logo.png":[["logo.c460f790.png","../assets/logo.png"],"../assets/logo.png"],"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/main.js":[function(require,module,exports) {
+},{"./components/TaskList":"../src/components/TaskList.vue","./components/g-signin-button":"../src/components/g-signin-button.vue","./utils.js":"../src/utils.js","./../assets/logo.png":[["logo.c460f790.png","../assets/logo.png"],"../assets/logo.png"],"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/main.js":[function(require,module,exports) {
 "use strict";
 
 var _vue = _interopRequireDefault(require("vue"));
@@ -10091,7 +10251,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41775" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36569" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

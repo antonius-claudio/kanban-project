@@ -36,9 +36,21 @@
                 <div class="icon-action">
                     <i class="material-icons tiny icon-delete" v-on:click="deleteTask">delete</i>
                 </div>
-                <div class="icon-action">
-                    <i class="material-icons tiny icon-reorder">swap_horiz</i>
-                </div>
+                <span
+                @mouseover="hover = true"
+                @mouseleave="hover = false"
+                >
+                    <div class="icon-action">
+                        <i class="material-icons tiny icon-reorder">swap_horiz</i>
+                    </div>
+                    <ul v-if="hover">
+                        <li v-if="task.category !== 'Backlog'" v-on:click="updateTo('Backlog')">to backlog</li>
+                        <li v-if="task.category !== 'Todo'" v-on:click="updateTo('Todo')">to todo</li>
+                        <li v-if="task.category !== 'Done'" v-on:click="updateTo('Done')">to done</li>
+                        <li v-if="task.category !== 'Completed'" v-on:click="updateTo('Completed')">to completed</li>
+                    </ul>
+                </span>
+                
             </div>
         </div>
     </div> 
@@ -57,7 +69,8 @@ export default {
     data() {
         return {
             isEdit: false,
-            inputUpdateTask: ''
+            inputUpdateTask: '',
+            hover: false
         }
     },
     methods: {
@@ -74,9 +87,41 @@ export default {
                 }
             })
             .then((response) => {
-                console.log('updateee', response.data);
                 this.inputUpdateTask = '';
                 this.isEdit = !this.isEdit;
+                this.$emit('itemUpdatedTask', response.data);
+                Swal.fire(
+                'Success!',
+                'You have updated task!',
+                'success'
+                );
+            })
+            .catch((err) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: err.response.data.message,
+                    showClass: {
+                        popup: 'animated fadeInDown faster'
+                    },
+                    hideClass: {
+                        popup: 'animated fadeOutUp faster'
+                    }
+                })
+            });
+        },updateTo: function(categ) {
+            axios({
+                url: url + `/tasks/${this.task.id}`,
+                method: 'PUT',
+                data: {
+                    title: this.task.title,
+                    category: categ
+                },
+                headers: {
+                    access_token: localStorage.getItem('access_token')
+                }
+            })
+            .then((response) => {
                 this.$emit('itemUpdatedTask', response.data);
                 Swal.fire(
                 'Success!',

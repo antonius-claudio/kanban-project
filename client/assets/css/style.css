@@ -93,6 +93,20 @@ nav ul li:hover {
 .container .column .card .bottom .right-bottom .photo img {
   width: 40px;
 }
+.container .column .card .bottom .right-bottom span ul {
+  position: absolute;
+  z-index: 1;
+  width: 40%;
+}
+.container .column .card .bottom .right-bottom span ul li {
+  padding: 3px;
+  background-color: #e6f7ff;
+  border: 1px solid #fff;
+}
+.container .column .card .bottom .right-bottom span ul li:hover {
+  background-color: #5daed5;
+  cursor: pointer;
+}
 .container .column .newForm {
   background-color: #f2c798db;
   border-radius: 5px;
@@ -133,6 +147,28 @@ nav ul li:hover {
 
 .own {
   background-color: #f3ffd1f0 !important;
+}
+
+.formR {
+  margin-top: 10px;
+  text-align: center;
+  border: 1px #abb5c6 solid;
+  padding: 20px;
+  background-color: #d1f4fd63;
+}
+
+.martop {
+  margin-top: 10% !important;
+}
+
+.gSigninButton {
+  /* This is where you control how the button looks. Be creative! */
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 3px;
+  background-color: #3c82f7;
+  color: #fff;
+  box-shadow: 0 3px 0 #0f69ff;
 }
 
 /*# sourceMappingURL=style.css.map */
