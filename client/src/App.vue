@@ -86,7 +86,7 @@ export default {
       emailLogin: '',
       passwordLogin: '',
       categories: ['Backlog', 'Todo', 'Done', 'Completed'],
-      tasks: null,
+      tasks: [],
       showDiv: false
     };
   },
@@ -329,6 +329,7 @@ export default {
     created() {
         // this.getTaks();
         if (localStorage.getItem('access_token')) {
+          console.log('masuk create app')
             this.isLogin = true;
             this.UserId = localStorage.getItem('id');
             this.getTaks();

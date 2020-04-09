@@ -1,5 +1,6 @@
 <template>
     <div  class="card { 'own' : checkSame(task.UserId,UserId) }">
+    
         <div class="upper">
             {{ task.title }}
         </div>
@@ -32,6 +33,10 @@
 <script>
 export default {
     name: 'TaskItem',
-    props: ['getTasksByCategory', 'UserId']
+    props: ['task', 'UserId'],
+    created() {
+        console.log(this.task)
+        console.log('masuk taksitem')
+    },
 }
 </script>

@@ -8817,7 +8817,7 @@ function patchScopedSlots (instance) {
   }
 }
 
-},{}],"../src/components/TaskItem.vue":[function(require,module,exports) {
+},{}],"../src/components/TaskList.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -8855,142 +8855,6 @@ exports.default = void 0;
 //
 //
 //
-var _default = {
-  name: 'TaskItem',
-  props: ['getTasksByCategory', 'UserId']
-};
-exports.default = _default;
-        var $d6a865 = exports.default || module.exports;
-      
-      if (typeof $d6a865 === 'function') {
-        $d6a865 = $d6a865.options;
-      }
-    
-        /* template */
-        Object.assign($d6a865, (function () {
-          var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "card { 'own' : checkSame(task.UserId,UserId) }" },
-    [
-      _c("div", { staticClass: "upper" }, [
-        _vm._v("\n        " + _vm._s(_vm.task.title) + "\n    ")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "bottom" }, [
-        _c("div", { staticClass: "left-bottom" }, [
-          _c("div", { staticClass: "date" }, [
-            _c("i", { staticClass: "material-icons tiny icon-date" }, [
-              _vm._v("date_range")
-            ]),
-            _c("span", [_vm._v(_vm._s(_vm.task.createdAt.slice(0, 10)))])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "author" }, [
-            _c("i", { staticClass: "material-icons tiny icon-author" }, [
-              _vm._v("person")
-            ]),
-            _c("span", [_vm._v(_vm._s(_vm.task.User.name))])
-          ])
-        ]),
-        _vm._v(
-          "\n        " +
-            _vm._s(_vm.UserId) +
-            "\n        " +
-            _vm._s(_vm.task.UserId) +
-            "\n        "
-        ),
-        _vm.task.UserId === _vm.UserId
-          ? _c("div", { staticClass: "right-bottom" }, [
-              _vm._m(0),
-              _vm._v(" "),
-              _c("div", { staticClass: "icon-action" }, [
-                _c(
-                  "i",
-                  {
-                    staticClass: "material-icons tiny icon-delete",
-                    on: {
-                      click: function($event) {
-                        return _vm.deleteTask(_vm.task.id)
-                      }
-                    }
-                  },
-                  [_vm._v("delete")]
-                )
-              ]),
-              _vm._v(" "),
-              _vm._m(1)
-            ])
-          : _vm._e()
-      ])
-    ]
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "icon-action" }, [
-      _c("i", { staticClass: "material-icons tiny icon-edit" }, [
-        _vm._v("edit")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "icon-action" }, [
-      _c("i", { staticClass: "material-icons tiny icon-reorder" }, [
-        _vm._v("swap_horiz")
-      ])
-    ])
-  }
-]
-render._withStripped = true
-
-          return {
-            render: render,
-            staticRenderFns: staticRenderFns,
-            _compiled: true,
-            _scopeId: null,
-            functional: undefined
-          };
-        })());
-      
-    /* hot reload */
-    (function () {
-      if (module.hot) {
-        var api = require('vue-hot-reload-api');
-        api.install(require('vue'));
-        if (api.compatible) {
-          module.hot.accept();
-          if (!module.hot.data) {
-            api.createRecord('$d6a865', $d6a865);
-          } else {
-            api.reload('$d6a865', $d6a865);
-          }
-        }
-
-        
-      }
-    })();
-},{"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/components/TaskList.vue":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _TaskItem = _interopRequireDefault(require("./TaskItem"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
 //
 //
 //
@@ -9031,11 +8895,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+// import TaskItem from './TaskItem';
 var _default = {
   name: 'TaskList',
   props: ['category', 'tasks', 'UserId'],
-  components: {
-    TaskItem: _TaskItem.default
+  components: {// TaskItem
   },
   computed: {
     getTasksByCategory: function getTasksByCategory() {
@@ -9047,6 +8911,10 @@ var _default = {
       });
       return temp;
     }
+  },
+  created: function created() {
+    console.log(this.getTasksByCategory);
+    console.log('masuk takslist');
   }
 };
 exports.default = _default;
@@ -9086,15 +8954,71 @@ exports.default = _default;
             _vm._v("Add new task\n        ")
           ]
         ),
-        _vm._v(" "),
+        _vm._v("\n        " + _vm._s(_vm.getTasksByCategory) + "\n        "),
         _vm._l(_vm.getTasksByCategory, function(task) {
-          return _c("TaskItem", {
-            key: task.id,
-            attrs: {
-              getTasksByCategory: _vm.getTasksByCategory,
-              UserId: _vm.UserId
-            }
-          })
+          return _c(
+            "div",
+            {
+              key: task.id,
+              staticClass: "card { 'own' : checkSame(task.UserId,UserId) }"
+            },
+            [
+              _c("div", { staticClass: "upper" }, [
+                _vm._v(
+                  "\n                " + _vm._s(task.title) + "\n            "
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "bottom" }, [
+                _c("div", { staticClass: "left-bottom" }, [
+                  _c("div", { staticClass: "date" }, [
+                    _c("i", { staticClass: "material-icons tiny icon-date" }, [
+                      _vm._v("date_range")
+                    ]),
+                    _c("span", [_vm._v(_vm._s(task.createdAt.slice(0, 10)))])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "author" }, [
+                    _c(
+                      "i",
+                      { staticClass: "material-icons tiny icon-author" },
+                      [_vm._v("person")]
+                    ),
+                    _c("span", [_vm._v(_vm._s(task.User.name))])
+                  ])
+                ]),
+                _vm._v(
+                  "\n                " +
+                    _vm._s(_vm.UserId) +
+                    "\n                " +
+                    _vm._s(task.UserId) +
+                    "\n                "
+                ),
+                task.UserId === _vm.UserId
+                  ? _c("div", { staticClass: "right-bottom" }, [
+                      _vm._m(0, true),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "icon-action" }, [
+                        _c(
+                          "i",
+                          {
+                            staticClass: "material-icons tiny icon-delete",
+                            on: {
+                              click: function($event) {
+                                return _vm.deleteTask(task.id)
+                              }
+                            }
+                          },
+                          [_vm._v("delete")]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _vm._m(1, true)
+                    ])
+                  : _vm._e()
+              ])
+            ]
+          )
         }),
         _vm._v(" "),
         _c("div", [
@@ -9135,7 +9059,7 @@ exports.default = _default;
                   _c("label", [_vm._v("Task")])
                 ]),
                 _vm._v(" "),
-                _vm._m(0),
+                _vm._m(2),
                 _vm._v(" "),
                 _c("div", { staticClass: "input-field col s6" }, [
                   _c(
@@ -9169,6 +9093,26 @@ exports.default = _default;
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon-action" }, [
+      _c("i", { staticClass: "material-icons tiny icon-edit" }, [
+        _vm._v("edit")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon-action" }, [
+      _c("i", { staticClass: "material-icons tiny icon-reorder" }, [
+        _vm._v("swap_horiz")
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -9208,7 +9152,7 @@ render._withStripped = true
         
       }
     })();
-},{"./TaskItem":"../src/components/TaskItem.vue","vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/App.vue":[function(require,module,exports) {
+},{"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/App.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9306,7 +9250,7 @@ var _default = {
       emailLogin: '',
       passwordLogin: '',
       categories: ['Backlog', 'Todo', 'Done', 'Completed'],
-      tasks: null,
+      tasks: [],
       showDiv: false
     };
   },
@@ -9548,6 +9492,7 @@ var _default = {
   created: function created() {
     // this.getTaks();
     if (localStorage.getItem('access_token')) {
+      console.log('masuk create app');
       this.isLogin = true;
       this.UserId = localStorage.getItem('id');
       this.getTaks();
@@ -9848,7 +9793,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("a", { staticClass: "brand-logo", attrs: { href: "#" } }, [
       _c("img", {
-        attrs: { src: "/eb9bee576fbec041d22f5092c460f790.png", alt: "" }
+        attrs: { src: "/logo.c460f790.png", alt: "" }
       })
     ])
   }
