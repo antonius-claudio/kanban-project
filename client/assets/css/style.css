@@ -8,13 +8,13 @@ body {
   width: 100%;
 }
 
-#app nav img {
+nav img {
   width: 60px;
 }
-#app nav ul li {
+nav ul li {
   padding: 0 10px;
 }
-#app nav ul li:hover {
+nav ul li:hover {
   background-color: #48282870;
   cursor: pointer;
 }
@@ -39,7 +39,7 @@ body {
 }
 .container .column .card {
   box-sizing: border-box;
-  background-color: #fff;
+  background-color: #ffe6e6;
   margin-bottom: 10px;
   padding: 10px;
   border-radius: 5px;
@@ -94,9 +94,9 @@ body {
   width: 40px;
 }
 .container .column .newForm {
-  padding: 5px;
   background-color: #f2c798db;
   border-radius: 5px;
+  padding: 5px 15px;
 }
 .container .column .newForm .input-field input {
   color: #4f4242;
@@ -121,7 +121,7 @@ body {
 }
 
 .own {
-  background-color: #fff3d1f0 !important;
+  background-color: #f3ffd1f0 !important;
 }
 
 /*# sourceMappingURL=style.css.map */

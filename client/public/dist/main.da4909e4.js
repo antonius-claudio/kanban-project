@@ -8542,6 +8542,15 @@ if (inBrowser) {
 
 var _default = Vue;
 exports.default = _default;
+},{}],"../src/utils.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.url = void 0;
+var url = "http://localhost:3000";
+exports.url = url;
 },{}],"../node_modules/vue-hot-reload-api/dist/index.js":[function(require,module,exports) {
 var Vue // late bind
 var version
@@ -8817,279 +8826,188 @@ function patchScopedSlots (instance) {
   }
 }
 
-},{}],"../src/components/TaskList.vue":[function(require,module,exports) {
+},{}],"../src/components/TaskItem.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-// import TaskItem from './TaskItem';
-var _default = {
-  name: 'TaskList',
-  props: ['category', 'tasks', 'UserId'],
-  components: {// TaskItem
-  },
-  computed: {
-    getTasksByCategory: function getTasksByCategory() {
-      var _this = this;
 
-      var temp = [];
-      this.tasks.forEach(function (i) {
-        i.category === _this.category ? temp.push(i) : '';
-      });
-      return temp;
+var _utils = require("../utils.js");
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  name: 'TaskItem',
+  props: ['task', 'UserId'],
+  computed: {
+    check: function check() {
+      return this.task.UserId === Number(this.UserId) ? true : false;
     }
   },
-  created: function created() {
-    console.log(this.getTasksByCategory);
-    console.log('masuk takslist');
+  methods: {
+    deleteTask: function deleteTask() {
+      var _this = this;
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          axios({
+            url: _utils.url + "/tasks/".concat(_this.task.id),
+            method: 'DELETE',
+            headers: {
+              access_token: localStorage.getItem('access_token')
+            }
+          }).then(function (response) {
+            _this.$emit('itemRemove', _this.task.id);
+
+            Swal.fire('Deleted!', "".concat(response.data.message), 'success');
+          }).catch(function (err) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: err.response.data.message,
+              showClass: {
+                popup: 'animated fadeInDown faster'
+              },
+              hideClass: {
+                popup: 'animated fadeOutUp faster'
+              }
+            });
+          });
+        }
+      }); // .then((result) => {
+      //     if (result.value) {
+      //         return axios({
+      //             url: url + `/tasks/${id}`,
+      //             method: 'DELETE',
+      //             headers: {
+      //                 access_token: localStorage.getItem('access_token')
+      //             }
+      //         })
+      //     }
+      // })
+      // .then((response) => {
+      //     let temp = null;
+      //     this.tasks.forEach((i, index) => {
+      //         if(i.id === id) {
+      //             temp = index;
+      //         }
+      //     });
+      //     this.tasks.splice(temp, 1);
+      //     Swal.fire(
+      //         'Deleted!',
+      //         `${response.data.message}`,
+      //         'success'
+      //     )
+      // })
+      // .catch((err) => {
+      //     Swal.fire({
+      //         icon: 'error',
+      //         title: 'Oops...',
+      //         text: err.response.data.message,
+      //         showClass: {
+      //           popup: 'animated fadeInDown faster'
+      //         },
+      //         hideClass: {
+      //           popup: 'animated fadeOutUp faster'
+      //         }
+      //     })
+      // })
+    }
   }
 };
 exports.default = _default;
-        var $0e98e7 = exports.default || module.exports;
+        var $d6a865 = exports.default || module.exports;
       
-      if (typeof $0e98e7 === 'function') {
-        $0e98e7 = $0e98e7.options;
+      if (typeof $d6a865 === 'function') {
+        $d6a865 = $d6a865.options;
       }
     
         /* template */
-        Object.assign($0e98e7, (function () {
+        Object.assign($d6a865, (function () {
           var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "column" }, [
-    _c("div", { staticClass: "title" }, [
-      _c("h5", [_vm._v(_vm._s(_vm.category))])
+  return _c("div", { class: { own: _vm.check, card: true } }, [
+    _vm._v("\n    " + _vm._s(_vm.check) + "\n    "),
+    _c("div", { staticClass: "upper" }, [
+      _vm._v("\n        " + _vm._s(_vm.task.title) + "\n    ")
     ]),
     _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "newForm" },
-      [
-        _c(
-          "div",
-          {
-            staticClass: "btnFormTask",
-            on: {
-              click: function($event) {
-                "showForm" + _vm.category
-              }
-            }
-          },
-          [
-            _c("i", { staticClass: "material-icons small" }, [_vm._v("add")]),
-            _vm._v("Add new task\n        ")
-          ]
-        ),
-        _vm._v("\n        " + _vm._s(_vm.getTasksByCategory) + "\n        "),
-        _vm._l(_vm.getTasksByCategory, function(task) {
-          return _c(
-            "div",
-            {
-              key: task.id,
-              staticClass: "card { 'own' : checkSame(task.UserId,UserId) }"
-            },
-            [
-              _c("div", { staticClass: "upper" }, [
-                _vm._v(
-                  "\n                " + _vm._s(task.title) + "\n            "
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "bottom" }, [
-                _c("div", { staticClass: "left-bottom" }, [
-                  _c("div", { staticClass: "date" }, [
-                    _c("i", { staticClass: "material-icons tiny icon-date" }, [
-                      _vm._v("date_range")
-                    ]),
-                    _c("span", [_vm._v(_vm._s(task.createdAt.slice(0, 10)))])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "author" }, [
-                    _c(
-                      "i",
-                      { staticClass: "material-icons tiny icon-author" },
-                      [_vm._v("person")]
-                    ),
-                    _c("span", [_vm._v(_vm._s(task.User.name))])
-                  ])
-                ]),
-                _vm._v(
-                  "\n                " +
-                    _vm._s(_vm.UserId) +
-                    "\n                " +
-                    _vm._s(task.UserId) +
-                    "\n                "
-                ),
-                task.UserId === _vm.UserId
-                  ? _c("div", { staticClass: "right-bottom" }, [
-                      _vm._m(0, true),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "icon-action" }, [
-                        _c(
-                          "i",
-                          {
-                            staticClass: "material-icons tiny icon-delete",
-                            on: {
-                              click: function($event) {
-                                return _vm.deleteTask(task.id)
-                              }
-                            }
-                          },
-                          [_vm._v("delete")]
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _vm._m(1, true)
-                    ])
-                  : _vm._e()
-              ])
-            ]
-          )
-        }),
+    _c("div", { staticClass: "bottom" }, [
+      _c("div", { staticClass: "left-bottom" }, [
+        _c("div", { staticClass: "date" }, [
+          _c("i", { staticClass: "material-icons tiny icon-date" }, [
+            _vm._v("date_range")
+          ]),
+          _c("span", [_vm._v(_vm._s(_vm.task.createdAt.slice(0, 10)))])
+        ]),
         _vm._v(" "),
-        _c("div", [
-          _c(
-            "form",
-            {
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  return _vm.createTask($event)
-                }
-              }
-            },
-            [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "input-field" }, [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.newTask,
-                        expression: "newTask"
-                      }
-                    ],
-                    attrs: { placeholder: "Task", type: "text" },
-                    domProps: { value: _vm.newTask },
-                    on: {
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.newTask = $event.target.value
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c("label", [_vm._v("Task")])
-                ]),
-                _vm._v(" "),
-                _vm._m(2),
-                _vm._v(" "),
-                _c("div", { staticClass: "input-field col s6" }, [
-                  _c(
-                    "span",
-                    { staticClass: "btn", on: { click: _vm.cancelTask } },
-                    [_vm._v("Cancel")]
-                  )
-                ])
-              ])
-            ]
-          )
+        _c("div", { staticClass: "author" }, [
+          _c("i", { staticClass: "material-icons tiny icon-author" }, [
+            _vm._v("person")
+          ]),
+          _c("span", [_vm._v(_vm._s(_vm.task.User.name))])
         ])
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "clickme", on: { click: _vm.toggleDiv } }, [
-      _c("i", { staticClass: "material-icons small" }, [_vm._v("add")]),
-      _vm._v("clickme\n    ")
-    ]),
-    _vm._v(" "),
-    _vm.showDiv
-      ? _c("div", [
-          _vm._v(
-            '\n        "Hello World showDivs: " ' +
-              _vm._s(_vm.showDiv) +
-              "\n    "
-          )
-        ])
-      : _c("div", [_vm._v("showDiv value is " + _vm._s(_vm.showDiv))])
+      ]),
+      _vm._v(" "),
+      _vm.check
+        ? _c("div", { staticClass: "right-bottom" }, [
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "icon-action" }, [
+              _c(
+                "i",
+                {
+                  staticClass: "material-icons tiny icon-delete",
+                  on: { click: _vm.deleteTask }
+                },
+                [_vm._v("delete")]
+              )
+            ]),
+            _vm._v(" "),
+            _vm._m(1)
+          ])
+        : _vm._e()
+    ])
   ])
 }
 var staticRenderFns = [
@@ -9112,7 +9030,239 @@ var staticRenderFns = [
         _vm._v("swap_horiz")
       ])
     ])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$d6a865', $d6a865);
+          } else {
+            api.reload('$d6a865', $d6a865);
+          }
+        }
+
+        
+      }
+    })();
+},{"../utils.js":"../src/utils.js","vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/components/TaskList.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _TaskItem = _interopRequireDefault(require("./TaskItem"));
+
+var _utils = require("../utils.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  name: 'TaskList',
+  data: function data() {
+    return {
+      newTask: '',
+      seenForm: false
+    };
   },
+  props: ['category', 'tasks', 'UserId'],
+  components: {
+    TaskItem: _TaskItem.default
+  },
+  computed: {
+    getTasksByCategory: function getTasksByCategory() {
+      var _this = this;
+
+      var temp = [];
+      this.tasks.forEach(function (i) {
+        i.category === _this.category ? temp.push(i) : '';
+      });
+      return temp;
+    }
+  },
+  created: function created() {},
+  methods: {
+    createTask: function createTask() {
+      var _this2 = this;
+
+      axios({
+        url: _utils.url + "/tasks",
+        method: 'POST',
+        data: {
+          title: this.newTask,
+          category: this.category
+        },
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      }).then(function (response) {
+        _this2.newTask = '';
+        _this2.seenForm = !_this2.seenForm;
+        Swal.fire('Success!', 'You have create new task!', 'success');
+
+        _this2.$emit('itemFromNewTask', response.data);
+      }).catch(function (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.message,
+          showClass: {
+            popup: 'animated fadeInDown faster'
+          },
+          hideClass: {
+            popup: 'animated fadeOutUp faster'
+          }
+        });
+      });
+    },
+    removeItem: function removeItem(payload) {
+      this.$emit('itemRemove', payload);
+    },
+    showForm: function showForm() {
+      this.seenForm = !this.seenForm;
+    }
+  }
+};
+exports.default = _default;
+        var $0e98e7 = exports.default || module.exports;
+      
+      if (typeof $0e98e7 === 'function') {
+        $0e98e7 = $0e98e7.options;
+      }
+    
+        /* template */
+        Object.assign($0e98e7, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "column" },
+    [
+      _c("div", { staticClass: "title" }, [
+        _c("h5", [_vm._v(_vm._s(_vm.category))])
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.getTasksByCategory, function(task) {
+        return _c("TaskItem", {
+          key: task.id,
+          attrs: { task: task, UserId: _vm.UserId },
+          on: { itemRemove: _vm.removeItem }
+        })
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "newForm" }, [
+        _c("div", { staticClass: "btnFormTask", on: { click: _vm.showForm } }, [
+          _c("i", { staticClass: "material-icons small" }, [_vm._v("add")]),
+          _vm._v("Add new task\n        ")
+        ]),
+        _vm._v(" "),
+        _vm.seenForm
+          ? _c("div", [
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.createTask($event)
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "input-field" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.newTask,
+                            expression: "newTask"
+                          }
+                        ],
+                        attrs: { placeholder: "Task", type: "text" },
+                        domProps: { value: _vm.newTask },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.newTask = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("label", [_vm._v("Task")])
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _vm._m(1)
+                  ])
+                ]
+              )
+            ])
+          : _vm._e()
+      ])
+    ],
+    2
+  )
+}
+var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -9120,6 +9270,16 @@ var staticRenderFns = [
     return _c("div", { staticClass: "input-field col s6" }, [
       _c("button", { staticClass: "btn", attrs: { type: "submit" } }, [
         _vm._v("Create")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-field col s6" }, [
+      _c("button", { staticClass: "btn", attrs: { type: "reset" } }, [
+        _vm._v("Clear")
       ])
     ])
   }
@@ -9152,7 +9312,7 @@ render._withStripped = true
         
       }
     })();
-},{"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/App.vue":[function(require,module,exports) {
+},{"./TaskItem":"../src/components/TaskItem.vue","../utils.js":"../src/utils.js","vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/App.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -9161,6 +9321,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _TaskList = _interopRequireDefault(require("./components/TaskList"));
+
+var _utils = require("./utils.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -9236,7 +9398,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
-var url = "http://localhost:3000";
+//
+//
 var _default = {
   name: "App",
   components: {
@@ -9249,6 +9412,9 @@ var _default = {
       UserId: null,
       emailLogin: '',
       passwordLogin: '',
+      nameRegister: '',
+      emailRegister: '',
+      passwordRegister: '',
       categories: ['Backlog', 'Todo', 'Done', 'Completed'],
       tasks: [],
       showDiv: false
@@ -9259,7 +9425,7 @@ var _default = {
       var _this = this;
 
       axios({
-        url: url + '/login',
+        url: _utils.url + '/login',
         method: 'POST',
         data: {
           email: this.emailLogin,
@@ -9293,7 +9459,7 @@ var _default = {
       var _this2 = this;
 
       axios({
-        url: url + '/register',
+        url: _utils.url + '/register',
         method: 'POST',
         data: {
           name: this.nameRegister,
@@ -9330,7 +9496,7 @@ var _default = {
 
       console.log(localStorage.getItem('access_token'));
       axios({
-        url: url + '/tasks',
+        url: _utils.url + '/tasks',
         method: 'GET',
         headers: {
           access_token: localStorage.getItem('access_token')
@@ -9343,89 +9509,8 @@ var _default = {
         console.log('gagal:', err.response.data);
       });
     },
-    deleteTask: function deleteTask(id) {
-      var _this4 = this;
-
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-      }).then(function (result) {
-        if (result.value) {
-          axios({
-            url: url + "/tasks/".concat(id),
-            method: 'DELETE',
-            headers: {
-              access_token: localStorage.getItem('access_token')
-            }
-          }).then(function (response) {
-            var temp = null;
-
-            _this4.tasks.forEach(function (i, index) {
-              if (i.id === id) {
-                temp = index;
-              }
-            });
-
-            _this4.tasks.splice(temp, 1);
-
-            Swal.fire('Deleted!', "".concat(response.data.message), 'success');
-          }).catch(function (err) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: err.response.data.message,
-              showClass: {
-                popup: 'animated fadeInDown faster'
-              },
-              hideClass: {
-                popup: 'animated fadeOutUp faster'
-              }
-            });
-          });
-        }
-      }); // .then((result) => {
-      //     if (result.value) {
-      //         return axios({
-      //             url: url + `/tasks/${id}`,
-      //             method: 'DELETE',
-      //             headers: {
-      //                 access_token: localStorage.getItem('access_token')
-      //             }
-      //         })
-      //     }
-      // })
-      // .then((response) => {
-      //     let temp = null;
-      //     this.tasks.forEach((i, index) => {
-      //         if(i.id === id) {
-      //             temp = index;
-      //         }
-      //     });
-      //     this.tasks.splice(temp, 1);
-      //     Swal.fire(
-      //         'Deleted!',
-      //         `${response.data.message}`,
-      //         'success'
-      //     )
-      // })
-      // .catch((err) => {
-      //     Swal.fire({
-      //         icon: 'error',
-      //         title: 'Oops...',
-      //         text: err.response.data.message,
-      //         showClass: {
-      //           popup: 'animated fadeInDown faster'
-      //         },
-      //         hideClass: {
-      //           popup: 'animated fadeOutUp faster'
-      //         }
-      //     })
-      // })
+    addedTask: function addedTask(payload) {
+      this.tasks.push(payload);
     },
     googleSign: function onSignIn(googleUser) {
       var profile = googleUser.getBasicProfile();
@@ -9438,7 +9523,7 @@ var _default = {
       var idToken = googleUser.getAuthResponse().id_token;
       console.log('sampai sini');
       $.ajax({
-        url: url + '/googleSignIn',
+        url: _utils.url + '/googleSignIn',
         method: 'POST',
         data: {
           idToken: idToken
@@ -9451,6 +9536,7 @@ var _default = {
       });
     },
     btnLogout: function btnLogout() {
+      console.log('User masuk log out.');
       this.isLogin = false;
       localStorage.removeItem('access_token');
       localStorage.removeItem('id');
@@ -9468,25 +9554,18 @@ var _default = {
         console.log('User signed out.');
       });
     },
-    createTask: function createTask(category) {
-      // axios({
-      //     url: url + '/tasks',
-      //     method: 'POST',
-      //     data: {
-      //         title: this.newTask
-      //     }
-      // })
-      console.log('masuk sini');
-      console.log(category);
-    },
-    toggleDiv: function toggleDiv() {
-      console.log('masuk sini, showDiv:', this.showDiv);
-      this.showDiv = !this.showDiv;
-      console.log('setelah toggle, showDivv:', this.showDiv);
-    },
     loadFormRegister: function loadFormRegister() {
       console.log('sini');
       this.isNew = !this.isNew;
+    },
+    removeItem: function removeItem(payload) {
+      var temp = null;
+      this.tasks.forEach(function (i, index) {
+        if (i.id === payload) {
+          temp = index;
+        }
+      });
+      this.tasks.splice(temp, 1);
     }
   },
   created: function created() {
@@ -9498,21 +9577,28 @@ var _default = {
       this.getTaks();
     }
   },
-  computed: {
-    checkSame: function checkSame(value1, value2) {
-      return value1 === value2 ? true : false;
-    }
-  },
-  watch: {// isLogin: function(val, oldVal) {
-    //     if (val) {
-    //         console.log('masuk refresh')
-    //         isLogin = true;
-    //         this.getTaks();
-    //     } else {
-    //         console.log('masuk gagal refresh')
-    //         isLogin = false;
-    //     }
-    // }
+  computed: {},
+  watch: {
+    isLogin: function (_isLogin) {
+      function isLogin(_x, _x2) {
+        return _isLogin.apply(this, arguments);
+      }
+
+      isLogin.toString = function () {
+        return _isLogin.toString();
+      };
+
+      return isLogin;
+    }(function (val, oldVal) {
+      if (localStorage.getItem('id')) {
+        console.log('masuk refresh');
+        isLogin = true;
+        this.getTaks();
+      } else {
+        console.log('masuk gagal refresh');
+        isLogin = false;
+      }
+    })
   }
 };
 exports.default = _default;
@@ -9758,7 +9844,8 @@ exports.default = _default;
                 category: category,
                 UserId: _vm.UserId,
                 tasks: _vm.tasks
-              }
+              },
+              on: { itemFromNewTask: _vm.addedTask, itemRemove: _vm.removeItem }
             })
           }),
           1
@@ -9826,7 +9913,7 @@ render._withStripped = true
         
       }
     })();
-},{"./components/TaskList":"../src/components/TaskList.vue","./../assets/logo.png":[["logo.c460f790.png","../assets/logo.png"],"../assets/logo.png"],"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/main.js":[function(require,module,exports) {
+},{"./components/TaskList":"../src/components/TaskList.vue","./utils.js":"../src/utils.js","./../assets/logo.png":[["logo.c460f790.png","../assets/logo.png"],"../assets/logo.png"],"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/main.js":[function(require,module,exports) {
 "use strict";
 
 var _vue = _interopRequireDefault(require("vue"));

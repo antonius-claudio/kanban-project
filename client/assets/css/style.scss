@@ -2,7 +2,7 @@ $background-Main: #fff;
 $sizing-Border: border-box;
 $paddingBox: 10px;
 $background-Column: #dadadaba;
-$background-Rows: #fff;
+$background-Rows: #ffe6e6;
 
 * {
     padding: 0;
@@ -12,20 +12,18 @@ body {
     background-color: $background-Main;
     width: 100%;
 }
-#app {
-    nav {
-        img {
-            width: 60px;
-        }
+nav {
+    img {
+        width: 60px;
+    }
 
-        ul {
-            li {
-                padding: 0 10px;
-            }
-            li:hover {
-                background-color: #48282870;
-                cursor: pointer;
-            }
+    ul {
+        li {
+            padding: 0 10px;
+        }
+        li:hover {
+            background-color: #48282870;
+            cursor: pointer;
         }
     }
 }
@@ -123,6 +121,7 @@ body {
         .newForm {
             background-color: #f2c798db;
             border-radius: 5px;
+            padding: 5px 15px;
 
             .input-field {
 
@@ -155,5 +154,5 @@ body {
 }
 
 .own {
-    background-color: #fff3d1f0 !important;
+    background-color: #f3ffd1f0 !important;
 }

@@ -64,7 +64,9 @@
           :key="category" 
           :category="category" 
           :UserId="UserId" 
-          :tasks="tasks">
+          :tasks="tasks" 
+          @itemFromNewTask="addedTask"
+          @itemRemove="removeItem">
           </TaskList>
       </div>
   </div>
@@ -72,7 +74,7 @@
 
 <script>
 import TaskList from './components/TaskList';
-const url = "http://localhost:3000";
+import { url } from './utils.js';
 export default {
   name: "App",
   components: {
@@ -85,6 +87,9 @@ export default {
       UserId: null,
       emailLogin: '',
       passwordLogin: '',
+      nameRegister: '',
+      emailRegister: '',
+      passwordRegister: '',
       categories: ['Backlog', 'Todo', 'Done', 'Completed'],
       tasks: [],
       showDiv: false
@@ -177,92 +182,8 @@ export default {
                 console.log('gagal:', err.response.data);
             });
         },
-        deleteTask: function (id) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, delete it!'
-            })
-            .then((result) => {
-                if (result.value) {
-                    axios({
-                        url: url + `/tasks/${id}`,
-                        method: 'DELETE',
-                        headers: {
-                            access_token: localStorage.getItem('access_token')
-                        }
-                    })
-                    .then((response) => {
-                        let temp = null;
-                        this.tasks.forEach((i, index) => {
-                            if(i.id === id) {
-                                temp = index;
-                            }
-                        });
-                        this.tasks.splice(temp, 1);
-                        Swal.fire(
-                            'Deleted!',
-                            `${response.data.message}`,
-                            'success'
-                        )
-                    })
-                    .catch((err) => {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: err.response.data.message,
-                            showClass: {
-                              popup: 'animated fadeInDown faster'
-                            },
-                            hideClass: {
-                              popup: 'animated fadeOutUp faster'
-                            }
-                        })
-                    })
-                }
-            })
-            // .then((result) => {
-            //     if (result.value) {
-            //         return axios({
-            //             url: url + `/tasks/${id}`,
-            //             method: 'DELETE',
-            //             headers: {
-            //                 access_token: localStorage.getItem('access_token')
-            //             }
-            //         })
-            //     }
-            // })
-            // .then((response) => {
-            //     let temp = null;
-            //     this.tasks.forEach((i, index) => {
-            //         if(i.id === id) {
-            //             temp = index;
-            //         }
-            //     });
-            //     this.tasks.splice(temp, 1);
-            //     Swal.fire(
-            //         'Deleted!',
-            //         `${response.data.message}`,
-            //         'success'
-            //     )
-            // })
-            // .catch((err) => {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Oops...',
-            //         text: err.response.data.message,
-            //         showClass: {
-            //           popup: 'animated fadeInDown faster'
-            //         },
-            //         hideClass: {
-            //           popup: 'animated fadeOutUp faster'
-            //         }
-            //     })
-            // })
+        addedTask: function(payload) {
+          this.tasks.push(payload);
         },
         googleSign: function onSignIn (googleUser) {
             var profile = googleUser.getBasicProfile();
@@ -288,6 +209,7 @@ export default {
             })
         },
         btnLogout: function () {
+            console.log('User masuk log out.');
             this.isLogin = false;
             localStorage.removeItem('access_token');
             localStorage.removeItem('id');
@@ -305,25 +227,18 @@ export default {
             console.log('User signed out.');
             });
         },
-        createTask: function(category) {
-            // axios({
-            //     url: url + '/tasks',
-            //     method: 'POST',
-            //     data: {
-            //         title: this.newTask
-            //     }
-            // })
-            console.log('masuk sini')
-            console.log(category)
-        },
-        toggleDiv: function(){
-            console.log('masuk sini, showDiv:', this.showDiv)
-            this.showDiv = !this.showDiv;
-            console.log('setelah toggle, showDivv:', this.showDiv)
-        },
         loadFormRegister: function(){
             console.log('sini')
             this.isNew = !this.isNew;
+        },
+        removeItem: function(payload) {
+          let temp = null;
+          this.tasks.forEach((i, index) => {
+              if(i.id === payload) {
+                  temp = index;
+              }
+          });
+          this.tasks.splice(temp, 1);
         }
     },
     created() {
@@ -336,21 +251,19 @@ export default {
         }
     },
     computed: {
-        checkSame: function (value1, value2) {
-            return value1 === value2 ? true : false;
-        }
+        
     },
     watch: {
-        // isLogin: function(val, oldVal) {
-        //     if (val) {
-        //         console.log('masuk refresh')
-        //         isLogin = true;
-        //         this.getTaks();
-        //     } else {
-        //         console.log('masuk gagal refresh')
-        //         isLogin = false;
-        //     }
-        // }
+        isLogin: function(val, oldVal) {
+            if (localStorage.getItem('id')) {
+                console.log('masuk refresh')
+                isLogin = true;
+                this.getTaks();
+            } else {
+                console.log('masuk gagal refresh')
+                isLogin = false;
+            }
+        }
     }
 };
 </script>
