@@ -128,6 +128,17 @@ nav {
                 input {
                     color: #4f4242;
                 }
+                ::-webkit-input-placeholder { /* Edge */
+                    color: #681616;
+                }
+                
+                :-ms-input-placeholder { /* Internet Explorer 10-11 */
+                    color: #681616;
+                }
+                
+                ::placeholder {
+                    color: #681616;
+                }
                 label {
                     color: #4f4242;
                 }

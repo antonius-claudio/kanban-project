@@ -66,7 +66,8 @@
           :UserId="UserId" 
           :tasks="tasks" 
           @itemFromNewTask="addedTask"
-          @itemRemove="removeItem">
+          @itemRemove="removeItem"
+          @itemUpdate="updateItem">
           </TaskList>
       </div>
   </div>
@@ -228,7 +229,6 @@ export default {
             });
         },
         loadFormRegister: function(){
-            console.log('sini')
             this.isNew = !this.isNew;
         },
         removeItem: function(payload) {
@@ -239,6 +239,14 @@ export default {
               }
           });
           this.tasks.splice(temp, 1);
+        },
+        updateItem: function(payload) {
+          this.tasks.forEach(i => {
+            if(i.id === payload.id) {
+              i.title = payload.title;
+              i.category = payload.category;
+            }
+          })
         }
     },
     created() {
@@ -256,11 +264,9 @@ export default {
     watch: {
         isLogin: function(val, oldVal) {
             if (localStorage.getItem('id')) {
-                console.log('masuk refresh')
                 isLogin = true;
                 this.getTaks();
             } else {
-                console.log('masuk gagal refresh')
                 isLogin = false;
             }
         }

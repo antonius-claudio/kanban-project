@@ -8866,6 +8866,22 @@ var _utils = require("../utils.js");
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default = {
   name: 'TaskItem',
   props: ['task', 'UserId'],
@@ -8874,9 +8890,58 @@ var _default = {
       return this.task.UserId === Number(this.UserId) ? true : false;
     }
   },
+  data: function data() {
+    return {
+      isEdit: false,
+      inputUpdateTask: ''
+    };
+  },
   methods: {
-    deleteTask: function deleteTask() {
+    update: function update() {
       var _this = this;
+
+      axios({
+        url: _utils.url + "/tasks/".concat(this.task.id),
+        method: 'PUT',
+        data: {
+          title: this.inputUpdateTask,
+          category: this.task.category
+        },
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      }).then(function (response) {
+        console.log('updateee', response.data);
+        _this.inputUpdateTask = '';
+        _this.isEdit = !_this.isEdit;
+
+        _this.$emit('itemUpdatedTask', response.data);
+
+        Swal.fire('Success!', 'You have updated task!', 'success');
+      }).catch(function (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.message,
+          showClass: {
+            popup: 'animated fadeInDown faster'
+          },
+          hideClass: {
+            popup: 'animated fadeOutUp faster'
+          }
+        });
+      });
+    },
+    cancelUpdate: function cancelUpdate() {
+      this.inputUpdateTask = '';
+      this.isEdit = !this.isEdit;
+    },
+    editTask: function editTask() {
+      this.inputUpdateTask = this.task.title;
+      this.isEdit = !this.isEdit;
+    },
+    deleteTask: function deleteTask() {
+      var _this2 = this;
 
       Swal.fire({
         title: 'Are you sure?',
@@ -8889,13 +8954,13 @@ var _default = {
       }).then(function (result) {
         if (result.value) {
           axios({
-            url: _utils.url + "/tasks/".concat(_this.task.id),
+            url: _utils.url + "/tasks/".concat(_this2.task.id),
             method: 'DELETE',
             headers: {
               access_token: localStorage.getItem('access_token')
             }
           }).then(function (response) {
-            _this.$emit('itemRemove', _this.task.id);
+            _this2.$emit('itemRemove', _this2.task.id);
 
             Swal.fire('Deleted!', "".concat(response.data.message), 'success');
           }).catch(function (err) {
@@ -8967,9 +9032,60 @@ exports.default = _default;
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { class: { own: _vm.check, card: true } }, [
-    _vm._v("\n    " + _vm._s(_vm.check) + "\n    "),
     _c("div", { staticClass: "upper" }, [
-      _vm._v("\n        " + _vm._s(_vm.task.title) + "\n    ")
+      _vm.isEdit === false
+        ? _c("div", [
+            _vm._v("\n            " + _vm._s(_vm.task.title) + "\n        ")
+          ])
+        : _c("div", [
+            _c(
+              "form",
+              {
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.update($event)
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "input-field" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.inputUpdateTask,
+                          expression: "inputUpdateTask"
+                        }
+                      ],
+                      attrs: { placeholder: "Task", type: "text" },
+                      domProps: { value: _vm.inputUpdateTask },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.inputUpdateTask = $event.target.value
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "input-field col s6" }, [
+                    _c(
+                      "span",
+                      { staticClass: "btn", on: { click: _vm.cancelUpdate } },
+                      [_vm._v("cancel")]
+                    )
+                  ])
+                ])
+              ]
+            )
+          ])
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "bottom" }, [
@@ -8991,7 +9107,16 @@ exports.default = _default;
       _vm._v(" "),
       _vm.check
         ? _c("div", { staticClass: "right-bottom" }, [
-            _vm._m(0),
+            _c("div", { staticClass: "icon-action" }, [
+              _c(
+                "i",
+                {
+                  staticClass: "material-icons tiny icon-edit",
+                  on: { click: _vm.editTask }
+                },
+                [_vm._v("edit")]
+              )
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "icon-action" }, [
               _c(
@@ -9015,9 +9140,9 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "icon-action" }, [
-      _c("i", { staticClass: "material-icons tiny icon-edit" }, [
-        _vm._v("edit")
+    return _c("div", { staticClass: "input-field col s6" }, [
+      _c("button", { staticClass: "btn", attrs: { type: "submit" } }, [
+        _vm._v("update")
       ])
     ])
   },
@@ -9170,6 +9295,9 @@ var _default = {
     removeItem: function removeItem(payload) {
       this.$emit('itemRemove', payload);
     },
+    updateItem: function updateItem(payload) {
+      this.$emit('itemUpdate', payload);
+    },
     showForm: function showForm() {
       this.seenForm = !this.seenForm;
     }
@@ -9200,7 +9328,7 @@ exports.default = _default;
         return _c("TaskItem", {
           key: task.id,
           attrs: { task: task, UserId: _vm.UserId },
-          on: { itemRemove: _vm.removeItem }
+          on: { itemRemove: _vm.removeItem, itemUpdatedTask: _vm.updateItem }
         })
       }),
       _vm._v(" "),
@@ -9244,9 +9372,7 @@ exports.default = _default;
                             _vm.newTask = $event.target.value
                           }
                         }
-                      }),
-                      _vm._v(" "),
-                      _c("label", [_vm._v("Task")])
+                      })
                     ]),
                     _vm._v(" "),
                     _vm._m(0),
@@ -9326,6 +9452,7 @@ var _utils = require("./utils.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//
 //
 //
 //
@@ -9555,7 +9682,6 @@ var _default = {
       });
     },
     loadFormRegister: function loadFormRegister() {
-      console.log('sini');
       this.isNew = !this.isNew;
     },
     removeItem: function removeItem(payload) {
@@ -9566,6 +9692,14 @@ var _default = {
         }
       });
       this.tasks.splice(temp, 1);
+    },
+    updateItem: function updateItem(payload) {
+      this.tasks.forEach(function (i) {
+        if (i.id === payload.id) {
+          i.title = payload.title;
+          i.category = payload.category;
+        }
+      });
     }
   },
   created: function created() {
@@ -9591,11 +9725,9 @@ var _default = {
       return isLogin;
     }(function (val, oldVal) {
       if (localStorage.getItem('id')) {
-        console.log('masuk refresh');
         isLogin = true;
         this.getTaks();
       } else {
-        console.log('masuk gagal refresh');
         isLogin = false;
       }
     })
@@ -9845,7 +9977,11 @@ exports.default = _default;
                 UserId: _vm.UserId,
                 tasks: _vm.tasks
               },
-              on: { itemFromNewTask: _vm.addedTask, itemRemove: _vm.removeItem }
+              on: {
+                itemFromNewTask: _vm.addedTask,
+                itemRemove: _vm.removeItem,
+                itemUpdate: _vm.updateItem
+              }
             })
           }),
           1

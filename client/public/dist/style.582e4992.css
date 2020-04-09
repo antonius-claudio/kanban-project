@@ -101,6 +101,17 @@ nav ul li:hover {
 .container .column .newForm .input-field input {
   color: #4f4242;
 }
+.container .column .newForm .input-field ::-webkit-input-placeholder {
+  /* Edge */
+  color: #681616;
+}
+.container .column .newForm .input-field :-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #681616;
+}
+.container .column .newForm .input-field ::placeholder {
+  color: #681616;
+}
 .container .column .newForm .input-field label {
   color: #4f4242;
 }

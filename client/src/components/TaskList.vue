@@ -7,7 +7,8 @@
         <TaskItem v-for="task in getTasksByCategory" :key="task.id" 
         :task="task"
         :UserId="UserId"
-        @itemRemove="removeItem"></TaskItem>
+        @itemRemove="removeItem"
+        @itemUpdatedTask="updateItem"></TaskItem>
         
         <div class="newForm">
             <div class="btnFormTask"  v-on:click="showForm">
@@ -18,7 +19,6 @@
                     <div class="row">
                         <div class="input-field">
                             <input placeholder="Task" type="text" v-model="newTask">
-                            <label >Task</label>
                         </div>
                         <div class="input-field col s6">
                             <button type="submit" class="btn">Create</button>
@@ -96,8 +96,11 @@ export default {
                 });
             });
         },
-        removeItem: function(payload){
+        removeItem: function(payload) {
             this.$emit('itemRemove', payload);
+        },
+        updateItem: function(payload) {
+            this.$emit('itemUpdate', payload);
         },
         showForm: function(){
             this.seenForm = !this.seenForm

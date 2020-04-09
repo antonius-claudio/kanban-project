@@ -1,8 +1,24 @@
 <template>
     <div v-bind:class="{ own: check, 'card': true}" >
-        {{check}}
         <div class="upper">
-            {{ task.title }}
+            <div v-if="isEdit===false">
+                {{ task.title }}
+            </div>
+            <div v-else>
+                <form v-on:submit.prevent="update">
+                    <div class="row">
+                        <div class="input-field">
+                            <input placeholder="Task" type="text" v-model="inputUpdateTask">
+                        </div>
+                        <div class="input-field col s6">
+                            <button type="submit" class="btn">update</button>
+                        </div>
+                        <div class="input-field col s6">
+                            <span class="btn" v-on:click="cancelUpdate">cancel</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
         <div class="bottom">
             <div class="left-bottom">
@@ -15,7 +31,7 @@
             </div>
             <div class="right-bottom" v-if="check">
                 <div class="icon-action">
-                    <i class="material-icons tiny icon-edit">edit</i>
+                    <i class="material-icons tiny icon-edit" v-on:click="editTask">edit</i>
                 </div>
                 <div class="icon-action">
                     <i class="material-icons tiny icon-delete" v-on:click="deleteTask">delete</i>
@@ -38,7 +54,58 @@ export default {
             return this.task.UserId === Number(this.UserId) ? true : false ;
         }
     },
+    data() {
+        return {
+            isEdit: false,
+            inputUpdateTask: ''
+        }
+    },
     methods: {
+        update: function() {
+            axios({
+                url: url + `/tasks/${this.task.id}`,
+                method: 'PUT',
+                data: {
+                    title: this.inputUpdateTask,
+                    category: this.task.category
+                },
+                headers: {
+                    access_token: localStorage.getItem('access_token')
+                }
+            })
+            .then((response) => {
+                console.log('updateee', response.data);
+                this.inputUpdateTask = '';
+                this.isEdit = !this.isEdit;
+                this.$emit('itemUpdatedTask', response.data);
+                Swal.fire(
+                'Success!',
+                'You have updated task!',
+                'success'
+                );
+            })
+            .catch((err) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: err.response.data.message,
+                    showClass: {
+                        popup: 'animated fadeInDown faster'
+                    },
+                    hideClass: {
+                        popup: 'animated fadeOutUp faster'
+                    }
+                })
+            });
+        },
+        cancelUpdate: function () {
+            this.inputUpdateTask = '';
+            this.isEdit = !this.isEdit;
+        },
+        editTask: function () {
+            this.inputUpdateTask = this.task.title;
+            this.isEdit = !this.isEdit;
+        },
         deleteTask: function () {
             Swal.fire({
                 title: 'Are you sure?',
