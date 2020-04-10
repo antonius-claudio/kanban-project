@@ -1,71 +1,76 @@
 <template>
-  <div class="row" v-if="isLogin === false">
-      <div class="col s3 offset-s4 martop">
-          <div class="opening formR">
-              <form @submit.prevent="loginForm"  v-if="isNew === false">
-                  <h4>Login</h4>
-                  <div class="input-field col s12">
-                      <input type="text" placeholder="email" v-model="emailLogin">
-                  </div>
-                  <div class="input-field col s12">
-                      <input type="password" placeholder="password" v-model="passwordLogin">
-                  </div>
-                  <div class="input-field col s6">
-                      <button type="submit" class="btn">login</button>
-                  </div>
-                  <div class="input-field col s6">
-                      <!--<gsigninbutton class="g-signin2" @done="onUserLoggedIn"></gsigninbutton>-->
-                      <div class="g-signin2" @click="handleClickSignIn(onsuccess)"></div>
-                  </div>
-                  <div v-on:click="loadFormRegister">
-                      Don't have account?
-                  </div>
-              </form>
-              <form @submit.prevent="registerForm"  v-else-if="isNew === true">
-                  <h4>Register</h4>
-                  <div class="input-field col s12">
-                      <input type="text" placeholder="name" v-model="nameRegister">
-                  </div>
-                  <div class="input-field col s12">
-                      <input type="text" placeholder="email" v-model="emailRegister">
-                  </div>
-                  <div class="input-field col s12">
-                      <input type="password" placeholder="password" v-model="passwordRegister">
-                  </div>
-                  <div class="input-field col s6">
-                      <button type="submit" class="btn">register</button>
-                  </div>
-                  <div class="input-field col s6">
-                      <!--<div class="g-signin2" v-on:click="googleSign(onSignIn)" data-onsuccess="onSignIn"></div>-->
-                  </div>
-                  <div v-on:click="loadFormRegister">
-                      Already have account?
-                  </div>
-              </form>
-          </div>
-      </div>
-  </div>
+  <div>
+    <div class="row" v-if="isLogin === false">
+        <div class="col s3 offset-s4 martop">
+            <div class="opening formR">
+                <form @submit.prevent="loginForm"  v-if="isNew === false">
+                    <h4>Login</h4>
+                    <div class="input-field col s12">
+                        <input type="text" placeholder="email" v-model="emailLogin">
+                    </div>
+                    <div class="input-field col s12">
+                        <input type="password" placeholder="password" v-model="passwordLogin">
+                    </div>
+                    <div class="col s12 colBtn">
+                        <div class="input-field col s6">
+                            <button type="submit" class="btn">login</button>
+                        </div>
+                        <div class="input-field col s6">
+                            <a @click.prevent="handleClickSignIn" v-if="!isSignIn" :disabled="!isInit" class="goog">login with <i class="fab fa-google-plus-g"></i></a>
+                            <button @click.prevent="handleClickSignOut" v-if="isSignIn" :disabled="!isInit">signout</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div v-on:click="loadFormRegister">
+                            Don't have account?
+                        </div>
+                    </div>
+                </form>
+                <form @submit.prevent="registerForm"  v-else-if="isNew === true">
+                    <h4>Register</h4>
+                    <div class="input-field col s12">
+                        <input type="text" placeholder="name" v-model="nameRegister">
+                    </div>
+                    <div class="input-field col s12">
+                        <input type="text" placeholder="email" v-model="emailRegister">
+                    </div>
+                    <div class="input-field col s12">
+                        <input type="password" placeholder="password" v-model="passwordRegister">
+                    </div>
+                    <div class="input-field col s12">
+                        <button type="submit" class="btn">register</button>
+                    </div>
+                    <div>
+                        <div v-on:click="loadFormRegister">
+                            Already have account?
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-  <div class="content" v-else>
-      <nav>
-          <div class="nav-wrapper">
-              <a href="#" class="brand-logo"><img src="../assets/logo.png" alt=""></a>
-              <ul id="nav-mobile" class="right hide-on-med-and-down">
-                  <li v-on:click="btnLogout">Logout</li>
-              </ul>
-          </div>
-      </nav>
-      <div class="container">
-          <TaskList v-for="category in categories" 
-          :key="category" 
-          :category="category" 
-          :UserId="UserId" 
-          :tasks="tasks" 
-          @itemFromNewTask="addedTask"
-          @itemRemove="removeItem"
-          @itemUpdate="updateItem">
-          </TaskList>
-      </div>
+    <div class="content" v-else>
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#" class="brand-logo"><img src="../assets/logo.png" alt=""></a>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li @click.prevent="handleClickSignOut">Logout</li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container">
+            <TaskList v-for="category in categories" 
+            :key="category" 
+            :category="category" 
+            :UserId="UserId" 
+            :tasks="tasks" 
+            @itemFromNewTask="addedTask"
+            @itemRemove="removeItem"
+            @itemUpdate="updateItem">
+            </TaskList>
+        </div>
+    </div>
   </div>
 </template>
 
@@ -89,10 +94,84 @@ export default {
       passwordRegister: '',
       categories: ['Backlog', 'Todo', 'Done', 'Completed'],
       tasks: [],
-      showDiv: false
+      showDiv: false,
+      isInit: false,
+      isSignIn: false
     };
   },
   methods: {
+        handleClickSignIn(){
+            this.$gAuth.signIn()
+            .then(user => {
+                // On success do something, refer to https://developers.google.com/api-client-library/javascript/reference/referencedocs#googleusergetid
+                this.isSignIn = this.$gAuth.isAuthorized
+                let token = user.getAuthResponse().id_token;
+                axios({
+                    url: url + '/googleSignIn',
+                    method: 'POST',
+                    data: {
+                        idToken: token
+                    }
+                })
+                .then((response) => {
+                    this.isLogin = !this.isLogin;
+                    this.UserId = response.data.id;
+                    localStorage.setItem('access_token', response.data.access_token);
+                    localStorage.setItem('id', response.data.id);
+                    localStorage.setItem('name', response.data.name);
+                    this.getTasks();
+                })
+                .catch((err) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: err.response.data.message,
+                        showClass: {
+                        popup: 'animated fadeInDown faster'
+                        },
+                        hideClass: {
+                        popup: 'animated fadeOutUp faster'
+                        }
+                    })
+                });
+            })
+            .catch(error  => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Failed connect to google',
+                    showClass: {
+                      popup: 'animated fadeInDown faster'
+                    },
+                    hideClass: {
+                      popup: 'animated fadeOutUp faster'
+                    }
+                })
+            })
+        },
+
+        handleClickSignOut(){
+            this.$gAuth.signOut()
+            .then(() => {
+                // On success do something
+                this.isSignIn = this.$gAuth.isAuthorized
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('id');
+                localStorage.removeItem('name');
+                this.isLogin = !this.isLogin;
+                this.UserId = null;
+                this.emailLogin = '';
+                this.passwordLogin = '';
+                this.nameRegister = '';
+                this.emailRegister = '';
+                this.passwordRegister = '';
+                this.categories = ['Backlog', 'Todo', 'Done', 'Completed'];
+                this.tasks = [];
+            })
+            .catch(error  => {
+                // On fail do something
+            })
+        },
         loginForm: function () {
             axios({
                 url: url+'/login',
@@ -110,7 +189,7 @@ export default {
                 localStorage.setItem('access_token', response.data.access_token);
                 localStorage.setItem('id', response.data.id);
                 localStorage.setItem('name', response.data.name);
-                // this.getTaks();
+                this.getTasks();
             })
             .catch(err => {
                 Swal.fire({
@@ -138,14 +217,14 @@ export default {
             })
             .then((response) => {
                 this.isLogin = !this.isLogin;
-                this.emailRegister = '';
+                this.nameRegister = '';
                 this.emailRegister = '';
                 this.passwordRegister = '';
                 this.UserId = response.data.id;
                 localStorage.setItem('access_token', response.data.access_token);
                 localStorage.setItem('id', response.data.id);
                 localStorage.setItem('name', response.data.name);
-                // this.getTaks();
+                this.getTasks();
             })
             .catch(err => {
                 Swal.fire({
@@ -161,8 +240,7 @@ export default {
                 })
             })
         },
-        getTaks: function () {
-          console.log(localStorage.getItem('access_token'))
+        getTasks: function () {
             axios({
                 url: url + '/tasks',
                 method: 'GET',
@@ -172,44 +250,26 @@ export default {
             })
             .then((response) => {
                 this.tasks = response.data;
-                // console.log('berhasil:', this.tasks);
-                console.log('masuk task', this.tasks)
             })
             .catch((err) => {
-                console.log('gagal:', err.response.data);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'failed to get data from server',
+                    showClass: {
+                      popup: 'animated fadeInDown faster'
+                    },
+                    hideClass: {
+                      popup: 'animated fadeOutUp faster'
+                    }
+                })
             });
         },
         addedTask: function(payload) {
           this.tasks.push(payload);
         },
-        onUserLoggedIn (payload) {
-            console.log('masuk App onUserLoggedIn', payload)
-        //   const profile = user.getBasicProfile();
-        //   console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        //   console.log('Name: ' + profile.getName());
-        //   console.log('Image URL: ' + profile.getImageUrl());
-        //   console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-        //   let idToken = user.getAuthResponse().id_token;
-        //   console.log('sampai sini');
-        },
         btnLogout: function () {
-            console.log('User masuk log out.');
-            this.isLogin = !this.isLogin;
-            localStorage.removeItem('access_token');
-            localStorage.removeItem('id');
-            localStorage.removeItem('name');
-            this.UserId = null;
-            this.emailLogin = '';
-            this.passwordLogin = '';
-            this.nameRegister = '';
-            this.emailRegister = '';
-            this.passwordRegister = '';
-            this.categories = ['Backlog', 'Todo', 'Done', 'Completed'];
-            this.tasks = [];
-            var auth2 = gapi.auth2.getAuthInstance();
-            auth2.signOut().then(function () {
-            console.log('User signed out.');
-            });
+            
         },
         loadFormRegister: function(){
             this.isNew = !this.isNew;
@@ -230,10 +290,6 @@ export default {
                   i.category = payload.category;
                 }
             })
-        },
-        onSignIn (user) {
-            console.log('masuk on sign in')
-            const profile = user.getBasicProfile()
         }
     },
     created() {
@@ -241,18 +297,22 @@ export default {
         if (localStorage.getItem('access_token')) {
             this.isLogin = !this.isLogin;
             this.UserId = localStorage.getItem('id');
-            this.getTaks();
+            this.getTasks();
         }
     },
     mounted() {
-        
+        let that = this
+        let checkGauthLoad = setInterval(function(){
+        that.isInit = that.$gAuth.isInit
+        that.isSignIn = that.$gAuth.isAuthorized
+        if(that.isInit) clearInterval(checkGauthLoad)
+        }, 1000);
     },
     watch: {
         isLogin: function(val, oldVal) {
             if (localStorage.getItem('access_token')) {
                 this.isLogin = true;
-                this.getTaks();
-
+                this.getTasks();
             } else {
                 this.isLogin = false;
             }

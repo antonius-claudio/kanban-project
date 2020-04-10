@@ -9641,6 +9641,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //
 //
+//
+//
+//
+//
+//
 var _default = {
   name: "App",
   components: {
@@ -9658,12 +9663,86 @@ var _default = {
       passwordRegister: '',
       categories: ['Backlog', 'Todo', 'Done', 'Completed'],
       tasks: [],
-      showDiv: false
+      showDiv: false,
+      isInit: false,
+      isSignIn: false
     };
   },
   methods: {
-    loginForm: function loginForm() {
+    handleClickSignIn: function handleClickSignIn() {
       var _this = this;
+
+      this.$gAuth.signIn().then(function (user) {
+        // On success do something, refer to https://developers.google.com/api-client-library/javascript/reference/referencedocs#googleusergetid
+        _this.isSignIn = _this.$gAuth.isAuthorized;
+        var token = user.getAuthResponse().id_token;
+        axios({
+          url: _utils.url + '/googleSignIn',
+          method: 'POST',
+          data: {
+            idToken: token
+          }
+        }).then(function (response) {
+          console.log('googleeee', response);
+          _this.isLogin = !_this.isLogin;
+          _this.UserId = response.data.id;
+          localStorage.setItem('access_token', response.data.access_token);
+          localStorage.setItem('id', response.data.id);
+          localStorage.setItem('name', response.data.name);
+
+          _this.getTasks();
+        }).catch(function (err) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: err.response.data.message,
+            showClass: {
+              popup: 'animated fadeInDown faster'
+            },
+            hideClass: {
+              popup: 'animated fadeOutUp faster'
+            }
+          });
+        });
+      }).catch(function (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Failed connect to google',
+          showClass: {
+            popup: 'animated fadeInDown faster'
+          },
+          hideClass: {
+            popup: 'animated fadeOutUp faster'
+          }
+        });
+      });
+    },
+    handleClickSignOut: function handleClickSignOut() {
+      var _this2 = this;
+
+      this.$gAuth.signOut().then(function () {
+        // On success do something
+        console.log('User masuk log out.', _this2.isLogin);
+        _this2.isSignIn = _this2.$gAuth.isAuthorized;
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('id');
+        localStorage.removeItem('name');
+        _this2.isLogin = !_this2.isLogin;
+        _this2.UserId = null;
+        _this2.emailLogin = '';
+        _this2.passwordLogin = '';
+        _this2.nameRegister = '';
+        _this2.emailRegister = '';
+        _this2.passwordRegister = '';
+        _this2.categories = ['Backlog', 'Todo', 'Done', 'Completed'];
+        _this2.tasks = [];
+        console.log('User masuk log out.', _this2.isLogin);
+      }).catch(function (error) {// On fail do something
+      });
+    },
+    loginForm: function loginForm() {
+      var _this3 = this;
 
       axios({
         url: _utils.url + '/login',
@@ -9673,13 +9752,15 @@ var _default = {
           password: this.passwordLogin
         }
       }).then(function (response) {
-        _this.isLogin = !_this.isLogin;
-        _this.UserId = response.data.id;
-        _this.emailLogin = '';
-        _this.passwordLogin = '';
+        _this3.isLogin = !_this3.isLogin;
+        _this3.UserId = response.data.id;
+        _this3.emailLogin = '';
+        _this3.passwordLogin = '';
         localStorage.setItem('access_token', response.data.access_token);
         localStorage.setItem('id', response.data.id);
-        localStorage.setItem('name', response.data.name); // this.getTaks();
+        localStorage.setItem('name', response.data.name);
+
+        _this3.getTasks();
       }).catch(function (err) {
         Swal.fire({
           icon: 'error',
@@ -9695,7 +9776,7 @@ var _default = {
       });
     },
     registerForm: function registerForm() {
-      var _this2 = this;
+      var _this4 = this;
 
       axios({
         url: _utils.url + '/register',
@@ -9706,14 +9787,16 @@ var _default = {
           password: this.passwordRegister
         }
       }).then(function (response) {
-        _this2.isLogin = !_this2.isLogin;
-        _this2.emailRegister = '';
-        _this2.emailRegister = '';
-        _this2.passwordRegister = '';
-        _this2.UserId = response.data.id;
+        _this4.isLogin = !_this4.isLogin;
+        _this4.nameRegister = '';
+        _this4.emailRegister = '';
+        _this4.passwordRegister = '';
+        _this4.UserId = response.data.id;
         localStorage.setItem('access_token', response.data.access_token);
         localStorage.setItem('id', response.data.id);
-        localStorage.setItem('name', response.data.name); // this.getTaks();
+        localStorage.setItem('name', response.data.name);
+
+        _this4.getTasks();
       }).catch(function (err) {
         Swal.fire({
           icon: 'error',
@@ -9728,10 +9811,11 @@ var _default = {
         });
       });
     },
-    getTaks: function getTaks() {
-      var _this3 = this;
+    getTasks: function getTasks() {
+      var _this5 = this;
 
       console.log(localStorage.getItem('access_token'));
+      console.log(_utils.url);
       axios({
         url: _utils.url + '/tasks',
         method: 'GET',
@@ -9739,9 +9823,9 @@ var _default = {
           access_token: localStorage.getItem('access_token')
         }
       }).then(function (response) {
-        _this3.tasks = response.data; // console.log('berhasil:', this.tasks);
+        _this5.tasks = response.data; // console.log('berhasil:', this.tasks);
 
-        console.log('masuk task', _this3.tasks);
+        console.log('masuk task', _this5.tasks);
       }).catch(function (err) {
         console.log('gagal:', err.response.data);
       });
@@ -9749,34 +9833,7 @@ var _default = {
     addedTask: function addedTask(payload) {
       this.tasks.push(payload);
     },
-    onUserLoggedIn: function onUserLoggedIn(payload) {
-      console.log('masuk App onUserLoggedIn', payload); //   const profile = user.getBasicProfile();
-      //   console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-      //   console.log('Name: ' + profile.getName());
-      //   console.log('Image URL: ' + profile.getImageUrl());
-      //   console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-      //   let idToken = user.getAuthResponse().id_token;
-      //   console.log('sampai sini');
-    },
-    btnLogout: function btnLogout() {
-      console.log('User masuk log out.');
-      this.isLogin = !this.isLogin;
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('id');
-      localStorage.removeItem('name');
-      this.UserId = null;
-      this.emailLogin = '';
-      this.passwordLogin = '';
-      this.nameRegister = '';
-      this.emailRegister = '';
-      this.passwordRegister = '';
-      this.categories = ['Backlog', 'Todo', 'Done', 'Completed'];
-      this.tasks = [];
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function () {
-        console.log('User signed out.');
-      });
-    },
+    btnLogout: function btnLogout() {},
     loadFormRegister: function loadFormRegister() {
       this.isNew = !this.isNew;
     },
@@ -9796,10 +9853,6 @@ var _default = {
           i.category = payload.category;
         }
       });
-    },
-    onSignIn: function onSignIn(user) {
-      console.log('masuk on sign in');
-      var profile = user.getBasicProfile();
     }
   },
   created: function created() {
@@ -9807,19 +9860,42 @@ var _default = {
     if (localStorage.getItem('access_token')) {
       this.isLogin = !this.isLogin;
       this.UserId = localStorage.getItem('id');
-      this.getTaks();
+      this.getTasks();
     }
   },
-  mounted: function mounted() {},
+  mounted: function mounted() {
+    var that = this;
+    var checkGauthLoad = setInterval(function () {
+      that.isInit = that.$gAuth.isInit;
+      that.isSignIn = that.$gAuth.isAuthorized;
+      if (that.isInit) clearInterval(checkGauthLoad);
+    }, 1000);
+  },
   watch: {
-    isLogin: function isLogin(val, oldVal) {
-      if (localStorage.getItem('access_token')) {
-        this.isLogin = true;
-        this.getTaks();
-      } else {
-        this.isLogin = false;
+    isLogin: function (_isLogin) {
+      function isLogin(_x, _x2) {
+        return _isLogin.apply(this, arguments);
       }
-    }
+
+      isLogin.toString = function () {
+        return _isLogin.toString();
+      };
+
+      return isLogin;
+    }(function (val, oldVal) {
+      console.log('watch is login', isLogin);
+
+      if (localStorage.getItem('access_token')) {
+        console.log('watch is login if awal', isLogin);
+        this.isLogin = true;
+        this.getTasks();
+        console.log('watch is login if akhir', isLogin);
+      } else {
+        console.log('watch is login esele awal', isLogin);
+        this.isLogin = false;
+        console.log('watch is loginwlse akhir', isLogin);
+      }
+    })
   }
 };
 exports.default = _default;
@@ -9835,225 +9911,273 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm.isLogin === false
-    ? _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col s3 offset-s4 martop" }, [
-          _c("div", { staticClass: "opening formR" }, [
-            _vm.isNew === false
-              ? _c(
-                  "form",
-                  {
-                    on: {
-                      submit: function($event) {
-                        $event.preventDefault()
-                        return _vm.loginForm($event)
+  return _c("div", [
+    _vm.isLogin === false
+      ? _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col s3 offset-s4 martop" }, [
+            _c("div", { staticClass: "opening formR" }, [
+              _vm.isNew === false
+                ? _c(
+                    "form",
+                    {
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                          return _vm.loginForm($event)
+                        }
                       }
-                    }
-                  },
-                  [
-                    _c("h4", [_vm._v("Login")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "input-field col s12" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.emailLogin,
-                            expression: "emailLogin"
-                          }
-                        ],
-                        attrs: { type: "text", placeholder: "email" },
-                        domProps: { value: _vm.emailLogin },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                    },
+                    [
+                      _c("h4", [_vm._v("Login")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "input-field col s12" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.emailLogin,
+                              expression: "emailLogin"
                             }
-                            _vm.emailLogin = $event.target.value
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "input-field col s12" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.passwordLogin,
-                            expression: "passwordLogin"
-                          }
-                        ],
-                        attrs: { type: "password", placeholder: "password" },
-                        domProps: { value: _vm.passwordLogin },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                          ],
+                          attrs: { type: "text", placeholder: "email" },
+                          domProps: { value: _vm.emailLogin },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.emailLogin = $event.target.value
                             }
-                            _vm.passwordLogin = $event.target.value
                           }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _vm._m(0),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "input-field col s6" }, [
-                      _c("div", {
-                        staticClass: "g-signin2",
-                        on: {
-                          click: function($event) {
-                            return _vm.handleClickSignIn(_vm.onsuccess)
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "input-field col s12" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.passwordLogin,
+                              expression: "passwordLogin"
+                            }
+                          ],
+                          attrs: { type: "password", placeholder: "password" },
+                          domProps: { value: _vm.passwordLogin },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.passwordLogin = $event.target.value
+                            }
                           }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col s12 colBtn" }, [
+                        _vm._m(0),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "input-field col s6" }, [
+                          !_vm.isSignIn
+                            ? _c(
+                                "a",
+                                {
+                                  staticClass: "goog",
+                                  attrs: { disabled: !_vm.isInit },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.handleClickSignIn($event)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v("login with "),
+                                  _c("i", {
+                                    staticClass: "fab fa-google-plus-g"
+                                  })
+                                ]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.isSignIn
+                            ? _c(
+                                "button",
+                                {
+                                  attrs: { disabled: !_vm.isInit },
+                                  on: {
+                                    click: function($event) {
+                                      $event.preventDefault()
+                                      return _vm.handleClickSignOut($event)
+                                    }
+                                  }
+                                },
+                                [_vm._v("signout")]
+                              )
+                            : _vm._e()
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", [
+                        _c("div", { on: { click: _vm.loadFormRegister } }, [
+                          _vm._v(
+                            "\n                          Don't have account?\n                      "
+                          )
+                        ])
+                      ])
+                    ]
+                  )
+                : _vm.isNew === true
+                ? _c(
+                    "form",
+                    {
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                          return _vm.registerForm($event)
                         }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { on: { click: _vm.loadFormRegister } }, [
-                      _vm._v(
-                        "\n                    Don't have account?\n                "
-                      )
-                    ])
-                  ]
-                )
-              : _vm.isNew === true
-              ? _c(
-                  "form",
-                  {
-                    on: {
-                      submit: function($event) {
-                        $event.preventDefault()
-                        return _vm.registerForm($event)
                       }
-                    }
-                  },
-                  [
-                    _c("h4", [_vm._v("Register")]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "input-field col s12" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.nameRegister,
-                            expression: "nameRegister"
-                          }
-                        ],
-                        attrs: { type: "text", placeholder: "name" },
-                        domProps: { value: _vm.nameRegister },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                    },
+                    [
+                      _c("h4", [_vm._v("Register")]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "input-field col s12" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.nameRegister,
+                              expression: "nameRegister"
                             }
-                            _vm.nameRegister = $event.target.value
-                          }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "input-field col s12" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.emailRegister,
-                            expression: "emailRegister"
-                          }
-                        ],
-                        attrs: { type: "text", placeholder: "email" },
-                        domProps: { value: _vm.emailRegister },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                          ],
+                          attrs: { type: "text", placeholder: "name" },
+                          domProps: { value: _vm.nameRegister },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.nameRegister = $event.target.value
                             }
-                            _vm.emailRegister = $event.target.value
                           }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "input-field col s12" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.passwordRegister,
-                            expression: "passwordRegister"
-                          }
-                        ],
-                        attrs: { type: "password", placeholder: "password" },
-                        domProps: { value: _vm.passwordRegister },
-                        on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "input-field col s12" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.emailRegister,
+                              expression: "emailRegister"
                             }
-                            _vm.passwordRegister = $event.target.value
+                          ],
+                          attrs: { type: "text", placeholder: "email" },
+                          domProps: { value: _vm.emailRegister },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.emailRegister = $event.target.value
+                            }
                           }
-                        }
-                      })
-                    ]),
-                    _vm._v(" "),
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "input-field col s6" }),
-                    _vm._v(" "),
-                    _c("div", { on: { click: _vm.loadFormRegister } }, [
-                      _vm._v(
-                        "\n                    Already have account?\n                "
-                      )
-                    ])
-                  ]
-                )
-              : _vm._e()
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "input-field col s12" }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.passwordRegister,
+                              expression: "passwordRegister"
+                            }
+                          ],
+                          attrs: { type: "password", placeholder: "password" },
+                          domProps: { value: _vm.passwordRegister },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.passwordRegister = $event.target.value
+                            }
+                          }
+                        })
+                      ]),
+                      _vm._v(" "),
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c("div", [
+                        _c("div", { on: { click: _vm.loadFormRegister } }, [
+                          _vm._v(
+                            "\n                          Already have account?\n                      "
+                          )
+                        ])
+                      ])
+                    ]
+                  )
+                : _vm._e()
+            ])
           ])
         ])
-      ])
-    : _c("div", { staticClass: "content" }, [
-        _c("nav", [
-          _c("div", { staticClass: "nav-wrapper" }, [
-            _vm._m(2),
-            _vm._v(" "),
-            _c(
-              "ul",
-              {
-                staticClass: "right hide-on-med-and-down",
-                attrs: { id: "nav-mobile" }
-              },
-              [_c("li", { on: { click: _vm.btnLogout } }, [_vm._v("Logout")])]
-            )
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "container" },
-          _vm._l(_vm.categories, function(category) {
-            return _c("TaskList", {
-              key: category,
-              attrs: {
-                category: category,
-                UserId: _vm.UserId,
-                tasks: _vm.tasks
-              },
-              on: {
-                itemFromNewTask: _vm.addedTask,
-                itemRemove: _vm.removeItem,
-                itemUpdate: _vm.updateItem
-              }
-            })
-          }),
-          1
-        )
-      ])
+      : _c("div", { staticClass: "content" }, [
+          _c("nav", [
+            _c("div", { staticClass: "nav-wrapper" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c(
+                "ul",
+                {
+                  staticClass: "right hide-on-med-and-down",
+                  attrs: { id: "nav-mobile" }
+                },
+                [
+                  _c(
+                    "li",
+                    {
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.handleClickSignOut($event)
+                        }
+                      }
+                    },
+                    [_vm._v("Logout")]
+                  )
+                ]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "container" },
+            _vm._l(_vm.categories, function(category) {
+              return _c("TaskList", {
+                key: category,
+                attrs: {
+                  category: category,
+                  UserId: _vm.UserId,
+                  tasks: _vm.tasks
+                },
+                on: {
+                  itemFromNewTask: _vm.addedTask,
+                  itemRemove: _vm.removeItem,
+                  itemUpdate: _vm.updateItem
+                }
+              })
+            }),
+            1
+          )
+        ])
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -10070,7 +10194,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "input-field col s6" }, [
+    return _c("div", { staticClass: "input-field col s12" }, [
       _c("button", { staticClass: "btn", attrs: { type: "submit" } }, [
         _vm._v("register")
       ])
@@ -10283,12 +10407,13 @@ var _vue = _interopRequireDefault(require("vue"));
 
 var _App = _interopRequireDefault(require("./App.vue"));
 
-var _vueGoogleOauth = _interopRequireDefault(require("../node_modules/vue-google-oauth2"));
+var _vueGoogleOauth = _interopRequireDefault(require("vue-google-oauth2"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var gauthOption = {
   clientId: '934346728491-d6fjbee0o2ljch7l1psmm4uimle5j271.apps.googleusercontent.com',
+  scope: 'profile email',
   prompt: 'select_account'
 };
 
@@ -10299,7 +10424,7 @@ new _vue.default({
     return h(_App.default);
   }
 }).$mount('#app');
-},{"vue":"../node_modules/vue/dist/vue.runtime.esm.js","./App.vue":"../src/App.vue","../node_modules/vue-google-oauth2":"../node_modules/vue-google-oauth2/index.js"}],"../../../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"vue":"../node_modules/vue/dist/vue.runtime.esm.js","./App.vue":"../src/App.vue","vue-google-oauth2":"../node_modules/vue-google-oauth2/index.js"}],"../../../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -10327,7 +10452,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44471" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41833" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
