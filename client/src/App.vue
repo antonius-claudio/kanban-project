@@ -14,8 +14,8 @@
                       <button type="submit" class="btn">login</button>
                   </div>
                   <div class="input-field col s6">
-                  <!--<gsigninbutton class="g-signin2" @done="onUserLoggedIn"></gsigninbutton>-->
-                      <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                      <!--<gsigninbutton class="g-signin2" @done="onUserLoggedIn"></gsigninbutton>-->
+                      <div class="g-signin2" @click="handleClickSignIn(onsuccess)"></div>
                   </div>
                   <div v-on:click="loadFormRegister">
                       Don't have account?
@@ -71,13 +71,11 @@
 
 <script>
 import TaskList from './components/TaskList';
-import gsigninbutton from './components/g-signin-button';
 import { url } from './utils.js';
 export default {
   name: "App",
   components: {
-    TaskList,
-    gsigninbutton
+    TaskList
   },
   data() {
     return {
@@ -184,37 +182,15 @@ export default {
         addedTask: function(payload) {
           this.tasks.push(payload);
         },
-        onUserLoggedIn (user) {
-          const profile = user.getBasicProfile();
-          console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-          console.log('Name: ' + profile.getName());
-          console.log('Image URL: ' + profile.getImageUrl());
-          console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-          let idToken = user.getAuthResponse().id_token;
-          console.log('sampai sini');
-        },
-        onSignIn: function (googleUser) {
-            const profile = googleUser.getBasicProfile();
-            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-            console.log('Name: ' + profile.getName());
-            console.log('Image URL: ' + profile.getImageUrl());
-            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-            let idToken = googleUser.getAuthResponse().id_token;
-            console.log(' ononSignIn sampai sini');
-            $.ajax({
-                url: url+'/googleSignIn',
-                method: 'POST',
-                data: {
-                    idToken
-                }
-            })
-            .done((result) => {
-                console.log('berhasil');
-                console.log(result);
-            })
-            .fail((err) => {
-                console.log(err);
-            })
+        onUserLoggedIn (payload) {
+            console.log('masuk App onUserLoggedIn', payload)
+        //   const profile = user.getBasicProfile();
+        //   console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        //   console.log('Name: ' + profile.getName());
+        //   console.log('Image URL: ' + profile.getImageUrl());
+        //   console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        //   let idToken = user.getAuthResponse().id_token;
+        //   console.log('sampai sini');
         },
         btnLogout: function () {
             console.log('User masuk log out.');
@@ -254,6 +230,10 @@ export default {
                   i.category = payload.category;
                 }
             })
+        },
+        onSignIn (user) {
+            console.log('masuk on sign in')
+            const profile = user.getBasicProfile()
         }
     },
     created() {
@@ -263,6 +243,9 @@ export default {
             this.UserId = localStorage.getItem('id');
             this.getTaks();
         }
+    },
+    mounted() {
+        
     },
     watch: {
         isLogin: function(val, oldVal) {

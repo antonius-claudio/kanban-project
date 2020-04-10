@@ -8542,6 +8542,15 @@ if (inBrowser) {
 
 var _default = Vue;
 exports.default = _default;
+},{}],"../src/utils.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.url = void 0;
+var url = "http://localhost:3000";
+exports.url = url;
 },{}],"../node_modules/vue-hot-reload-api/dist/index.js":[function(require,module,exports) {
 var Vue // late bind
 var version
@@ -8817,22 +8826,1000 @@ function patchScopedSlots (instance) {
   }
 }
 
-},{}],"../src/App.vue":[function(require,module,exports) {
+},{}],"../src/components/TaskItem.vue":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+var _utils = require("../utils.js");
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
 //
 var _default = {
+  name: 'TaskItem',
+  props: ['task', 'UserId'],
+  computed: {
+    check: function check() {
+      return this.task.UserId === Number(this.UserId) ? true : false;
+    }
+  },
   data: function data() {
     return {
-      message: 'Hello world'
+      isEdit: false,
+      inputUpdateTask: '',
+      hover: false
     };
+  },
+  methods: {
+    update: function update() {
+      var _this = this;
+
+      axios({
+        url: _utils.url + "/tasks/".concat(this.task.id),
+        method: 'PUT',
+        data: {
+          title: this.inputUpdateTask,
+          category: this.task.category
+        },
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      }).then(function (response) {
+        _this.inputUpdateTask = '';
+        _this.isEdit = !_this.isEdit;
+
+        _this.$emit('itemUpdatedTask', response.data);
+
+        Swal.fire('Success!', 'You have updated task!', 'success');
+      }).catch(function (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.message,
+          showClass: {
+            popup: 'animated fadeInDown faster'
+          },
+          hideClass: {
+            popup: 'animated fadeOutUp faster'
+          }
+        });
+      });
+    },
+    updateTo: function updateTo(categ) {
+      var _this2 = this;
+
+      axios({
+        url: _utils.url + "/tasks/".concat(this.task.id),
+        method: 'PUT',
+        data: {
+          title: this.task.title,
+          category: categ
+        },
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      }).then(function (response) {
+        _this2.$emit('itemUpdatedTask', response.data);
+
+        Swal.fire('Success!', 'You have updated task!', 'success');
+      }).catch(function (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.message,
+          showClass: {
+            popup: 'animated fadeInDown faster'
+          },
+          hideClass: {
+            popup: 'animated fadeOutUp faster'
+          }
+        });
+      });
+    },
+    cancelUpdate: function cancelUpdate() {
+      this.inputUpdateTask = '';
+      this.isEdit = !this.isEdit;
+    },
+    editTask: function editTask() {
+      this.inputUpdateTask = this.task.title;
+      this.isEdit = !this.isEdit;
+    },
+    deleteTask: function deleteTask() {
+      var _this3 = this;
+
+      Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          axios({
+            url: _utils.url + "/tasks/".concat(_this3.task.id),
+            method: 'DELETE',
+            headers: {
+              access_token: localStorage.getItem('access_token')
+            }
+          }).then(function (response) {
+            _this3.$emit('itemRemove', _this3.task.id);
+
+            Swal.fire('Deleted!', "".concat(response.data.message), 'success');
+          }).catch(function (err) {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: err.response.data.message,
+              showClass: {
+                popup: 'animated fadeInDown faster'
+              },
+              hideClass: {
+                popup: 'animated fadeOutUp faster'
+              }
+            });
+          });
+        }
+      }); // .then((result) => {
+      //     if (result.value) {
+      //         return axios({
+      //             url: url + `/tasks/${id}`,
+      //             method: 'DELETE',
+      //             headers: {
+      //                 access_token: localStorage.getItem('access_token')
+      //             }
+      //         })
+      //     }
+      // })
+      // .then((response) => {
+      //     let temp = null;
+      //     this.tasks.forEach((i, index) => {
+      //         if(i.id === id) {
+      //             temp = index;
+      //         }
+      //     });
+      //     this.tasks.splice(temp, 1);
+      //     Swal.fire(
+      //         'Deleted!',
+      //         `${response.data.message}`,
+      //         'success'
+      //     )
+      // })
+      // .catch((err) => {
+      //     Swal.fire({
+      //         icon: 'error',
+      //         title: 'Oops...',
+      //         text: err.response.data.message,
+      //         showClass: {
+      //           popup: 'animated fadeInDown faster'
+      //         },
+      //         hideClass: {
+      //           popup: 'animated fadeOutUp faster'
+      //         }
+      //     })
+      // })
+    }
+  }
+};
+exports.default = _default;
+        var $d6a865 = exports.default || module.exports;
+      
+      if (typeof $d6a865 === 'function') {
+        $d6a865 = $d6a865.options;
+      }
+    
+        /* template */
+        Object.assign($d6a865, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { class: { own: _vm.check, card: true } }, [
+    _c("div", { staticClass: "upper" }, [
+      _vm.isEdit === false
+        ? _c("div", [
+            _vm._v("\n            " + _vm._s(_vm.task.title) + "\n        ")
+          ])
+        : _c("div", [
+            _c(
+              "form",
+              {
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    return _vm.update($event)
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "input-field" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.inputUpdateTask,
+                          expression: "inputUpdateTask"
+                        }
+                      ],
+                      attrs: { placeholder: "Task", type: "text" },
+                      domProps: { value: _vm.inputUpdateTask },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.inputUpdateTask = $event.target.value
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "input-field col s6" }, [
+                    _c(
+                      "span",
+                      { staticClass: "btn", on: { click: _vm.cancelUpdate } },
+                      [_vm._v("cancel")]
+                    )
+                  ])
+                ])
+              ]
+            )
+          ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "bottom" }, [
+      _c("div", { staticClass: "left-bottom" }, [
+        _c("div", { staticClass: "date" }, [
+          _c("i", { staticClass: "material-icons tiny icon-date" }, [
+            _vm._v("date_range")
+          ]),
+          _c("span", [_vm._v(_vm._s(_vm.task.createdAt.slice(0, 10)))])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "author" }, [
+          _c("i", { staticClass: "material-icons tiny icon-author" }, [
+            _vm._v("person")
+          ]),
+          _c("span", [_vm._v(_vm._s(_vm.task.User.name))])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.check
+        ? _c("div", { staticClass: "right-bottom" }, [
+            _c("div", { staticClass: "icon-action" }, [
+              _c(
+                "i",
+                {
+                  staticClass: "material-icons tiny icon-edit",
+                  on: { click: _vm.editTask }
+                },
+                [_vm._v("edit")]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "icon-action" }, [
+              _c(
+                "i",
+                {
+                  staticClass: "material-icons tiny icon-delete",
+                  on: { click: _vm.deleteTask }
+                },
+                [_vm._v("delete")]
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "span",
+              {
+                on: {
+                  mouseover: function($event) {
+                    _vm.hover = true
+                  },
+                  mouseleave: function($event) {
+                    _vm.hover = false
+                  }
+                }
+              },
+              [
+                _vm._m(1),
+                _vm._v(" "),
+                _vm.hover
+                  ? _c("ul", [
+                      _vm.task.category !== "Backlog"
+                        ? _c(
+                            "li",
+                            {
+                              on: {
+                                click: function($event) {
+                                  return _vm.updateTo("Backlog")
+                                }
+                              }
+                            },
+                            [_vm._v("to backlog")]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.task.category !== "Todo"
+                        ? _c(
+                            "li",
+                            {
+                              on: {
+                                click: function($event) {
+                                  return _vm.updateTo("Todo")
+                                }
+                              }
+                            },
+                            [_vm._v("to todo")]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.task.category !== "Done"
+                        ? _c(
+                            "li",
+                            {
+                              on: {
+                                click: function($event) {
+                                  return _vm.updateTo("Done")
+                                }
+                              }
+                            },
+                            [_vm._v("to done")]
+                          )
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _vm.task.category !== "Completed"
+                        ? _c(
+                            "li",
+                            {
+                              on: {
+                                click: function($event) {
+                                  return _vm.updateTo("Completed")
+                                }
+                              }
+                            },
+                            [_vm._v("to completed")]
+                          )
+                        : _vm._e()
+                    ])
+                  : _vm._e()
+              ]
+            )
+          ])
+        : _vm._e()
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-field col s6" }, [
+      _c("button", { staticClass: "btn", attrs: { type: "submit" } }, [
+        _vm._v("update")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "icon-action" }, [
+      _c("i", { staticClass: "material-icons tiny icon-reorder" }, [
+        _vm._v("swap_horiz")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$d6a865', $d6a865);
+          } else {
+            api.reload('$d6a865', $d6a865);
+          }
+        }
+
+        
+      }
+    })();
+},{"../utils.js":"../src/utils.js","vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/components/TaskList.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _TaskItem = _interopRequireDefault(require("./TaskItem"));
+
+var _utils = require("../utils.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  name: 'TaskList',
+  data: function data() {
+    return {
+      newTask: '',
+      seenForm: false
+    };
+  },
+  props: ['category', 'tasks', 'UserId'],
+  components: {
+    TaskItem: _TaskItem.default
+  },
+  computed: {
+    getTasksByCategory: function getTasksByCategory() {
+      var _this = this;
+
+      var temp = [];
+      this.tasks.forEach(function (i) {
+        i.category === _this.category ? temp.push(i) : '';
+      });
+      return temp;
+    }
+  },
+  created: function created() {},
+  methods: {
+    createTask: function createTask() {
+      var _this2 = this;
+
+      axios({
+        url: _utils.url + "/tasks",
+        method: 'POST',
+        data: {
+          title: this.newTask,
+          category: this.category
+        },
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      }).then(function (response) {
+        _this2.newTask = '';
+        _this2.seenForm = !_this2.seenForm;
+        Swal.fire('Success!', 'You have create new task!', 'success');
+
+        _this2.$emit('itemFromNewTask', response.data);
+      }).catch(function (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.message,
+          showClass: {
+            popup: 'animated fadeInDown faster'
+          },
+          hideClass: {
+            popup: 'animated fadeOutUp faster'
+          }
+        });
+      });
+    },
+    removeItem: function removeItem(payload) {
+      this.$emit('itemRemove', payload);
+    },
+    updateItem: function updateItem(payload) {
+      this.$emit('itemUpdate', payload);
+    },
+    showForm: function showForm() {
+      this.seenForm = !this.seenForm;
+    }
+  }
+};
+exports.default = _default;
+        var $0e98e7 = exports.default || module.exports;
+      
+      if (typeof $0e98e7 === 'function') {
+        $0e98e7 = $0e98e7.options;
+      }
+    
+        /* template */
+        Object.assign($0e98e7, (function () {
+          var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "column" },
+    [
+      _c("div", { staticClass: "title" }, [
+        _c("h5", [_vm._v(_vm._s(_vm.category))])
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.getTasksByCategory, function(task) {
+        return _c("TaskItem", {
+          key: task.id,
+          attrs: { task: task, UserId: _vm.UserId },
+          on: { itemRemove: _vm.removeItem, itemUpdatedTask: _vm.updateItem }
+        })
+      }),
+      _vm._v(" "),
+      _c("div", { staticClass: "newForm" }, [
+        _c("div", { staticClass: "btnFormTask", on: { click: _vm.showForm } }, [
+          _c("i", { staticClass: "material-icons small" }, [_vm._v("add")]),
+          _vm._v("Add new task\n        ")
+        ]),
+        _vm._v(" "),
+        _vm.seenForm
+          ? _c("div", [
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.createTask($event)
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "input-field" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.newTask,
+                            expression: "newTask"
+                          }
+                        ],
+                        attrs: { placeholder: "Task", type: "text" },
+                        domProps: { value: _vm.newTask },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.newTask = $event.target.value
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _vm._m(1)
+                  ])
+                ]
+              )
+            ])
+          : _vm._e()
+      ])
+    ],
+    2
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-field col s6" }, [
+      _c("button", { staticClass: "btn", attrs: { type: "submit" } }, [
+        _vm._v("Create")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-field col s6" }, [
+      _c("button", { staticClass: "btn", attrs: { type: "reset" } }, [
+        _vm._v("Clear")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+          return {
+            render: render,
+            staticRenderFns: staticRenderFns,
+            _compiled: true,
+            _scopeId: null,
+            functional: undefined
+          };
+        })());
+      
+    /* hot reload */
+    (function () {
+      if (module.hot) {
+        var api = require('vue-hot-reload-api');
+        api.install(require('vue'));
+        if (api.compatible) {
+          module.hot.accept();
+          if (!module.hot.data) {
+            api.createRecord('$0e98e7', $0e98e7);
+          } else {
+            api.reload('$0e98e7', $0e98e7);
+          }
+        }
+
+        
+      }
+    })();
+},{"./TaskItem":"../src/components/TaskItem.vue","../utils.js":"../src/utils.js","vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/App.vue":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _TaskList = _interopRequireDefault(require("./components/TaskList"));
+
+var _utils = require("./utils.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var _default = {
+  name: "App",
+  components: {
+    TaskList: _TaskList.default
+  },
+  data: function data() {
+    return {
+      isLogin: false,
+      isNew: false,
+      UserId: null,
+      emailLogin: '',
+      passwordLogin: '',
+      nameRegister: '',
+      emailRegister: '',
+      passwordRegister: '',
+      categories: ['Backlog', 'Todo', 'Done', 'Completed'],
+      tasks: [],
+      showDiv: false
+    };
+  },
+  methods: {
+    loginForm: function loginForm() {
+      var _this = this;
+
+      axios({
+        url: _utils.url + '/login',
+        method: 'POST',
+        data: {
+          email: this.emailLogin,
+          password: this.passwordLogin
+        }
+      }).then(function (response) {
+        _this.isLogin = !_this.isLogin;
+        _this.UserId = response.data.id;
+        _this.emailLogin = '';
+        _this.passwordLogin = '';
+        localStorage.setItem('access_token', response.data.access_token);
+        localStorage.setItem('id', response.data.id);
+        localStorage.setItem('name', response.data.name); // this.getTaks();
+      }).catch(function (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.message,
+          showClass: {
+            popup: 'animated fadeInDown faster'
+          },
+          hideClass: {
+            popup: 'animated fadeOutUp faster'
+          }
+        });
+      });
+    },
+    registerForm: function registerForm() {
+      var _this2 = this;
+
+      axios({
+        url: _utils.url + '/register',
+        method: 'POST',
+        data: {
+          name: this.nameRegister,
+          email: this.emailRegister,
+          password: this.passwordRegister
+        }
+      }).then(function (response) {
+        _this2.isLogin = !_this2.isLogin;
+        _this2.emailRegister = '';
+        _this2.emailRegister = '';
+        _this2.passwordRegister = '';
+        _this2.UserId = response.data.id;
+        localStorage.setItem('access_token', response.data.access_token);
+        localStorage.setItem('id', response.data.id);
+        localStorage.setItem('name', response.data.name); // this.getTaks();
+      }).catch(function (err) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.message,
+          showClass: {
+            popup: 'animated fadeInDown faster'
+          },
+          hideClass: {
+            popup: 'animated fadeOutUp faster'
+          }
+        });
+      });
+    },
+    getTaks: function getTaks() {
+      var _this3 = this;
+
+      console.log(localStorage.getItem('access_token'));
+      axios({
+        url: _utils.url + '/tasks',
+        method: 'GET',
+        headers: {
+          access_token: localStorage.getItem('access_token')
+        }
+      }).then(function (response) {
+        _this3.tasks = response.data; // console.log('berhasil:', this.tasks);
+
+        console.log('masuk task', _this3.tasks);
+      }).catch(function (err) {
+        console.log('gagal:', err.response.data);
+      });
+    },
+    addedTask: function addedTask(payload) {
+      this.tasks.push(payload);
+    },
+    onUserLoggedIn: function onUserLoggedIn(payload) {
+      console.log('masuk App onUserLoggedIn', payload); //   const profile = user.getBasicProfile();
+      //   console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      //   console.log('Name: ' + profile.getName());
+      //   console.log('Image URL: ' + profile.getImageUrl());
+      //   console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+      //   let idToken = user.getAuthResponse().id_token;
+      //   console.log('sampai sini');
+    },
+    btnLogout: function btnLogout() {
+      console.log('User masuk log out.');
+      this.isLogin = !this.isLogin;
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('id');
+      localStorage.removeItem('name');
+      this.UserId = null;
+      this.emailLogin = '';
+      this.passwordLogin = '';
+      this.nameRegister = '';
+      this.emailRegister = '';
+      this.passwordRegister = '';
+      this.categories = ['Backlog', 'Todo', 'Done', 'Completed'];
+      this.tasks = [];
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+      });
+    },
+    loadFormRegister: function loadFormRegister() {
+      this.isNew = !this.isNew;
+    },
+    removeItem: function removeItem(payload) {
+      var temp = null;
+      this.tasks.forEach(function (i, index) {
+        if (i.id === payload) {
+          temp = index;
+        }
+      });
+      this.tasks.splice(temp, 1);
+    },
+    updateItem: function updateItem(payload) {
+      this.tasks.forEach(function (i) {
+        if (i.id === payload.id) {
+          i.title = payload.title;
+          i.category = payload.category;
+        }
+      });
+    },
+    onSignIn: function onSignIn(user) {
+      console.log('masuk on sign in');
+      var profile = user.getBasicProfile();
+    }
+  },
+  created: function created() {
+    // this.getTaks();
+    if (localStorage.getItem('access_token')) {
+      this.isLogin = !this.isLogin;
+      this.UserId = localStorage.getItem('id');
+      this.getTaks();
+    }
+  },
+  mounted: function mounted() {},
+  watch: {
+    isLogin: function isLogin(val, oldVal) {
+      if (localStorage.getItem('access_token')) {
+        this.isLogin = true;
+        this.getTaks();
+      } else {
+        this.isLogin = false;
+      }
+    }
   }
 };
 exports.default = _default;
@@ -8848,9 +9835,258 @@ exports.default = _default;
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("h1", [_vm._v(_vm._s(_vm.message))])
+  return _vm.isLogin === false
+    ? _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col s3 offset-s4 martop" }, [
+          _c("div", { staticClass: "opening formR" }, [
+            _vm.isNew === false
+              ? _c(
+                  "form",
+                  {
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.loginForm($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("h4", [_vm._v("Login")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "input-field col s12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.emailLogin,
+                            expression: "emailLogin"
+                          }
+                        ],
+                        attrs: { type: "text", placeholder: "email" },
+                        domProps: { value: _vm.emailLogin },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.emailLogin = $event.target.value
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "input-field col s12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.passwordLogin,
+                            expression: "passwordLogin"
+                          }
+                        ],
+                        attrs: { type: "password", placeholder: "password" },
+                        domProps: { value: _vm.passwordLogin },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.passwordLogin = $event.target.value
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "input-field col s6" }, [
+                      _c("div", {
+                        staticClass: "g-signin2",
+                        on: {
+                          click: function($event) {
+                            return _vm.handleClickSignIn(_vm.onsuccess)
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { on: { click: _vm.loadFormRegister } }, [
+                      _vm._v(
+                        "\n                    Don't have account?\n                "
+                      )
+                    ])
+                  ]
+                )
+              : _vm.isNew === true
+              ? _c(
+                  "form",
+                  {
+                    on: {
+                      submit: function($event) {
+                        $event.preventDefault()
+                        return _vm.registerForm($event)
+                      }
+                    }
+                  },
+                  [
+                    _c("h4", [_vm._v("Register")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "input-field col s12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.nameRegister,
+                            expression: "nameRegister"
+                          }
+                        ],
+                        attrs: { type: "text", placeholder: "name" },
+                        domProps: { value: _vm.nameRegister },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.nameRegister = $event.target.value
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "input-field col s12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.emailRegister,
+                            expression: "emailRegister"
+                          }
+                        ],
+                        attrs: { type: "text", placeholder: "email" },
+                        domProps: { value: _vm.emailRegister },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.emailRegister = $event.target.value
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "input-field col s12" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.passwordRegister,
+                            expression: "passwordRegister"
+                          }
+                        ],
+                        attrs: { type: "password", placeholder: "password" },
+                        domProps: { value: _vm.passwordRegister },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.passwordRegister = $event.target.value
+                          }
+                        }
+                      })
+                    ]),
+                    _vm._v(" "),
+                    _vm._m(1),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "input-field col s6" }),
+                    _vm._v(" "),
+                    _c("div", { on: { click: _vm.loadFormRegister } }, [
+                      _vm._v(
+                        "\n                    Already have account?\n                "
+                      )
+                    ])
+                  ]
+                )
+              : _vm._e()
+          ])
+        ])
+      ])
+    : _c("div", { staticClass: "content" }, [
+        _c("nav", [
+          _c("div", { staticClass: "nav-wrapper" }, [
+            _vm._m(2),
+            _vm._v(" "),
+            _c(
+              "ul",
+              {
+                staticClass: "right hide-on-med-and-down",
+                attrs: { id: "nav-mobile" }
+              },
+              [_c("li", { on: { click: _vm.btnLogout } }, [_vm._v("Logout")])]
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "container" },
+          _vm._l(_vm.categories, function(category) {
+            return _c("TaskList", {
+              key: category,
+              attrs: {
+                category: category,
+                UserId: _vm.UserId,
+                tasks: _vm.tasks
+              },
+              on: {
+                itemFromNewTask: _vm.addedTask,
+                itemRemove: _vm.removeItem,
+                itemUpdate: _vm.updateItem
+              }
+            })
+          }),
+          1
+        )
+      ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-field col s6" }, [
+      _c("button", { staticClass: "btn", attrs: { type: "submit" } }, [
+        _vm._v("login")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-field col s6" }, [
+      _c("button", { staticClass: "btn", attrs: { type: "submit" } }, [
+        _vm._v("register")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { staticClass: "brand-logo", attrs: { href: "#" } }, [
+      _c("img", {
+        attrs: { src: "/logo.c460f790.png", alt: "" }
+      })
+    ])
+  }
+]
 render._withStripped = true
 
           return {
@@ -8879,21 +10115,191 @@ render._withStripped = true
         
       }
     })();
-},{"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../src/main.js":[function(require,module,exports) {
+},{"./components/TaskList":"../src/components/TaskList.vue","./utils.js":"../src/utils.js","./../assets/logo.png":[["logo.c460f790.png","../assets/logo.png"],"../assets/logo.png"],"vue-hot-reload-api":"../node_modules/vue-hot-reload-api/dist/index.js","vue":"../node_modules/vue/dist/vue.runtime.esm.js"}],"../node_modules/vue-google-oauth2/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var googleAuth = function () {
+  function installClient() {
+    var apiUrl = 'https://apis.google.com/js/api.js';
+    return new Promise(resolve => {
+      var script = document.createElement('script');
+      script.src = apiUrl;
+
+      script.onreadystatechange = script.onload = function () {
+        if (!script.readyState || /loaded|complete/.test(script.readyState)) {
+          setTimeout(function () {
+            resolve();
+          }, 500);
+        }
+      };
+
+      document.getElementsByTagName('head')[0].appendChild(script);
+    });
+  }
+
+  function initClient(config) {
+    return new Promise(resolve => {
+      window.gapi.load('auth2', () => {
+        window.gapi.auth2.init(config).then(() => {
+          resolve(window.gapi);
+        });
+      });
+    });
+  }
+
+  function Auth() {
+    if (!(this instanceof Auth)) return new Auth();
+    this.GoogleAuth = null;
+    /* window.gapi.auth2.getAuthInstance() */
+
+    this.isAuthorized = false;
+    this.isInit = false;
+    this.prompt = null;
+
+    this.isLoaded = function () {
+      /* eslint-disable */
+      console.warn('isLoaded() will be deprecated. You can use "this.$gAuth.isInit"');
+      return !!this.GoogleAuth;
+    };
+
+    this.load = (config, prompt) => {
+      installClient().then(() => {
+        return initClient(config);
+      }).then(gapi => {
+        this.GoogleAuth = gapi.auth2.getAuthInstance();
+        this.isInit = true;
+        this.prompt = prompt;
+        this.isAuthorized = this.GoogleAuth.isSignedIn.get();
+      });
+    };
+
+    this.signIn = (successCallback, errorCallback) => {
+      return new Promise((resolve, reject) => {
+        if (!this.GoogleAuth) {
+          if (typeof errorCallback === 'function') errorCallback(false);
+          reject(false);
+          return;
+        }
+
+        this.GoogleAuth.signIn().then(googleUser => {
+          if (typeof successCallback === 'function') successCallback(googleUser);
+          this.isAuthorized = this.GoogleAuth.isSignedIn.get();
+          resolve(googleUser);
+        }).catch(error => {
+          if (typeof errorCallback === 'function') errorCallback(error);
+          reject(error);
+        });
+      });
+    };
+
+    this.getAuthCode = (successCallback, errorCallback) => {
+      return new Promise((resolve, reject) => {
+        if (!this.GoogleAuth) {
+          if (typeof errorCallback === 'function') errorCallback(false);
+          reject(false);
+          return;
+        }
+
+        this.GoogleAuth.grantOfflineAccess({
+          prompt: this.prompt
+        }).then(function (resp) {
+          if (typeof successCallback === 'function') successCallback(resp.code);
+          resolve(resp.code);
+        }).catch(function (error) {
+          if (typeof errorCallback === 'function') errorCallback(error);
+          reject(error);
+        });
+      });
+    };
+
+    this.signOut = (successCallback, errorCallback) => {
+      return new Promise((resolve, reject) => {
+        if (!this.GoogleAuth) {
+          if (typeof errorCallback === 'function') errorCallback(false);
+          reject(false);
+          return;
+        }
+
+        this.GoogleAuth.signOut().then(() => {
+          if (typeof successCallback === 'function') successCallback();
+          this.isAuthorized = false;
+          resolve(true);
+        }).catch(error => {
+          if (typeof errorCallback === 'function') errorCallback(error);
+          reject(error);
+        });
+      });
+    };
+  }
+
+  return new Auth();
+}();
+
+function installGoogleAuthPlugin(Vue, options) {
+  /* eslint-disable */
+  //set config
+  let GoogleAuthConfig = null;
+  let GoogleAuthDefaultConfig = {
+    scope: 'profile email',
+    discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
+  };
+  let prompt = 'select_account';
+
+  if (typeof options === 'object') {
+    GoogleAuthConfig = Object.assign(GoogleAuthDefaultConfig, options);
+    if (options.scope) GoogleAuthConfig.scope = options.scope;
+    if (options.prompt) prompt = options.prompt;
+
+    if (!options.clientId) {
+      console.warn('clientId is required');
+    }
+  } else {
+    console.warn('invalid option type. Object type accepted only');
+  } //Install Vue plugin
+
+
+  Vue.gAuth = googleAuth;
+  Object.defineProperties(Vue.prototype, {
+    $gAuth: {
+      get: function () {
+        return Vue.gAuth;
+      }
+    }
+  });
+  Vue.gAuth.load(GoogleAuthConfig, prompt);
+}
+
+var _default = installGoogleAuthPlugin;
+exports.default = _default;
+},{}],"../src/main.js":[function(require,module,exports) {
 "use strict";
 
 var _vue = _interopRequireDefault(require("vue"));
 
 var _App = _interopRequireDefault(require("./App.vue"));
 
+var _vueGoogleOauth = _interopRequireDefault(require("../node_modules/vue-google-oauth2"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var gauthOption = {
+  clientId: '934346728491-d6fjbee0o2ljch7l1psmm4uimle5j271.apps.googleusercontent.com',
+  prompt: 'select_account'
+};
+
+_vue.default.use(_vueGoogleOauth.default, gauthOption);
 
 new _vue.default({
   render: function render(h) {
     return h(_App.default);
   }
 }).$mount('#app');
-},{"vue":"../node_modules/vue/dist/vue.runtime.esm.js","./App.vue":"../src/App.vue"}],"../../../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"vue":"../node_modules/vue/dist/vue.runtime.esm.js","./App.vue":"../src/App.vue","../node_modules/vue-google-oauth2":"../node_modules/vue-google-oauth2/index.js"}],"../../../../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -8921,7 +10327,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "37153" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44471" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
