@@ -82,7 +82,6 @@ class controllerUser {
     static googleSignIn(req, res, next) {
         let idToken = req.body.idToken;
         let newUser = {};
-        console.log('masukkkkkkkkkk google sign in')
         client.verifyIdToken({
             idToken,
             audience: process.env.client_id_oauth_google
@@ -91,7 +90,6 @@ class controllerUser {
             const payload = result.getPayload();
             newUser.name = payload.name;
             newUser.email = payload.email;
-            console.log('masukkkkkkkkkk google sign in cek payload')
 
             // cek email di db
             return User.findOne({
@@ -107,7 +105,6 @@ class controllerUser {
                     UserEmail: result.email,
                     UserOrganization: result.organization
                 });
-                console.log('masukkkkkkkkkk google sign in  login')
                 res.status(200).json({access_token, id:result.id, name:result.name});
             } else {
                 newUser.password = '1234';
@@ -117,14 +114,13 @@ class controllerUser {
         .then((result) => {
             let access_token = sign({
                 UserId: result.id,
-                UserEmail: result.email
+                UserEmail: result.email,
+                UserOrganization: result.organization
             });
-            console.log('masukkkkkkkkkk google sign in  regis')
-            res.status(201).json({access_token, name:result.name});
+            res.status(201).json({access_token, id:result.dataValues.id, name:result.dataValues.name});
 
         })
         .catch((err) => {
-            console.log('masuk error', err);
             next(err);
         });
     }
