@@ -8,6 +8,7 @@ const gauthOption = {
   prompt: 'select_account'
 }
 Vue.use(GAuth, gauthOption);
+Vue.config.productionTip = false;
 
 new Vue({
   render: h => h(App),

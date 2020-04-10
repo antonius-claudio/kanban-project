@@ -8549,7 +8549,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.url = void 0;
-var url = "http://localhost:3000";
+var url = "http://localhost:3000"; // export const url = "https://lit-dawn-18982.herokuapp.com";
+
 exports.url = url;
 },{}],"../node_modules/vue-hot-reload-api/dist/index.js":[function(require,module,exports) {
 var Vue // late bind
@@ -9683,7 +9684,6 @@ var _default = {
             idToken: token
           }
         }).then(function (response) {
-          console.log('googleeee', response);
           _this.isLogin = !_this.isLogin;
           _this.UserId = response.data.id;
           localStorage.setItem('access_token', response.data.access_token);
@@ -9723,7 +9723,6 @@ var _default = {
 
       this.$gAuth.signOut().then(function () {
         // On success do something
-        console.log('User masuk log out.', _this2.isLogin);
         _this2.isSignIn = _this2.$gAuth.isAuthorized;
         localStorage.removeItem('access_token');
         localStorage.removeItem('id');
@@ -9737,7 +9736,6 @@ var _default = {
         _this2.passwordRegister = '';
         _this2.categories = ['Backlog', 'Todo', 'Done', 'Completed'];
         _this2.tasks = [];
-        console.log('User masuk log out.', _this2.isLogin);
       }).catch(function (error) {// On fail do something
       });
     },
@@ -9814,8 +9812,6 @@ var _default = {
     getTasks: function getTasks() {
       var _this5 = this;
 
-      console.log(localStorage.getItem('access_token'));
-      console.log(_utils.url);
       axios({
         url: _utils.url + '/tasks',
         method: 'GET',
@@ -9823,11 +9819,19 @@ var _default = {
           access_token: localStorage.getItem('access_token')
         }
       }).then(function (response) {
-        _this5.tasks = response.data; // console.log('berhasil:', this.tasks);
-
-        console.log('masuk task', _this5.tasks);
+        _this5.tasks = response.data;
       }).catch(function (err) {
-        console.log('gagal:', err.response.data);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'failed to get data from server',
+          showClass: {
+            popup: 'animated fadeInDown faster'
+          },
+          hideClass: {
+            popup: 'animated fadeOutUp faster'
+          }
+        });
       });
     },
     addedTask: function addedTask(payload) {
@@ -9872,30 +9876,14 @@ var _default = {
     }, 1000);
   },
   watch: {
-    isLogin: function (_isLogin) {
-      function isLogin(_x, _x2) {
-        return _isLogin.apply(this, arguments);
-      }
-
-      isLogin.toString = function () {
-        return _isLogin.toString();
-      };
-
-      return isLogin;
-    }(function (val, oldVal) {
-      console.log('watch is login', isLogin);
-
+    isLogin: function isLogin(val, oldVal) {
       if (localStorage.getItem('access_token')) {
-        console.log('watch is login if awal', isLogin);
         this.isLogin = true;
         this.getTasks();
-        console.log('watch is login if akhir', isLogin);
       } else {
-        console.log('watch is login esele awal', isLogin);
         this.isLogin = false;
-        console.log('watch is loginwlse akhir', isLogin);
       }
-    })
+    }
   }
 };
 exports.default = _default;
@@ -10419,6 +10407,7 @@ var gauthOption = {
 
 _vue.default.use(_vueGoogleOauth.default, gauthOption);
 
+_vue.default.config.productionTip = false;
 new _vue.default({
   render: function render(h) {
     return h(_App.default);
@@ -10452,7 +10441,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41833" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "38933" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
