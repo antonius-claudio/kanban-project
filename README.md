@@ -21,6 +21,7 @@ no needed
 ```
 {
   "access_token": "<access token user>",
+  "id": "<id user>",
   "name": "<name user>"
 }
 ```
@@ -66,6 +67,7 @@ no needed
 ```
 {
   "access_token": "<access token user>",
+  "id": "<id user>",
   "name": "<name user>"
 }
 ```
@@ -127,6 +129,7 @@ no needed
 ```
 {
   "access_token": "<access token user>",
+  "id": "<id user>",
   "name": "<name user>"
 }
 ```
@@ -135,6 +138,7 @@ no needed
 ```
 {
   "access_token": "<access token user>",
+  "id": "<id user>",
   "name": "<name user>"
 }
 ```
@@ -172,9 +176,18 @@ no needed
     "title": "<title task>",
     "category": "<category task>",
     "UserId": <id user task>,
-    "createdAt": "<date created task>",
-    "isOwner": <is owner task or not>
-  }
+    "createdAt": "<created date task>",
+    "updatedAt": "<updated date task>",
+    "User": {
+      "id": <id user creator>,
+      "name": "<name user creator>",
+      "email": "<email user creator>",
+      "password": "<encrypt password user creator>",
+      "organization": "<organization user creator>",
+      "createdAt": "<created date user>",
+      "updatedAt": "<updated date user>"
+    }
+  }, {},{},...
 ]
 ```
 
@@ -208,11 +221,20 @@ no needed
 **Response (200 - Ok)**
 ```
 {
-  "id": <id task>,
-  "title": "<title task>",
-  "category": "<category task>",
-  "createdAt": "<date created task>",
-  "UserId": <id creator>
+    "id": <id task>,
+    "title": "<title task>",
+    "category": "<category task>",
+    "UserId": <id user task>,
+    "createdAt": "<created date task>",
+    "updatedAt": "<updated date task>",
+    "User": {
+      "id": <id user creator>,
+      "name": "<name user creator>",
+      "email": "<email user creator>",
+      "password": "<encrypt password user creator>",
+      "organization": "<organization user creator>",
+      "createdAt": "<created date user>",
+      "updatedAt": "<updated date user>"
 }
 ```
 
@@ -271,8 +293,20 @@ no needed
 **Response (200 - Ok)**
 ```
 {
-  "title": "<title task updated>",
-  "category": "<category task updated>"
+    "id": <id updated task>,
+    "title": "<title updated task>",
+    "category": "<category updated task>",
+    "UserId": <id user updated task>,
+    "createdAt": "<created date updated task>",
+    "updatedAt": "<updated date updated task>",
+    "User": {
+      "id": <id user updated creator>,
+      "name": "<name user updated creator>",
+      "email": "<email user updated creator>",
+      "password": "<encrypt password user updated creator>",
+      "organization": "<organization user updated creator>",
+      "createdAt": "<created date updated user>",
+      "updatedAt": "<updated date updated user>"
 }
 ```
 
