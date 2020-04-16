@@ -77,6 +77,9 @@
 <script>
 import TaskList from './components/TaskList';
 import { url } from './utils.js';
+import io from 'socket.io-client';
+
+let socket = io(url);
 export default {
   name: "App",
   components: {
@@ -101,6 +104,7 @@ export default {
   },
   methods: {
         handleClickSignIn(){
+            console.log('-----methods handleClickSignIn----')
             this.$gAuth.signIn()
             .then(user => {
                 // On success do something, refer to https://developers.google.com/api-client-library/javascript/reference/referencedocs#googleusergetid
@@ -149,8 +153,8 @@ export default {
                 })
             })
         },
-
         handleClickSignOut(){
+            console.log('-----methods handleClickSignOut----')
             this.$gAuth.signOut()
             .then(() => {
                 // On success do something
@@ -173,6 +177,7 @@ export default {
             })
         },
         loginForm: function () {
+            console.log('-----methods loginForm----')
             axios({
                 url: url+'/login',
                 method: 'POST',
@@ -206,6 +211,7 @@ export default {
             })
         },
         registerForm: function () {
+            console.log('-----methods registerForm----')
             axios({
                 url: url + '/register',
                 method: 'POST',
@@ -241,6 +247,7 @@ export default {
             })
         },
         getTasks: function () {
+            console.log('-----methods getTasks----')
             axios({
                 url: url + '/tasks',
                 method: 'GET',
@@ -266,22 +273,23 @@ export default {
             });
         },
         addedTask: function(payload) {
-          this.tasks.push(payload);
-        },
-        btnLogout: function () {
-            
+            console.log('-----methods addedTask----')
+            this.tasks.push(payload);
+            socket.emit('createTask', payload);
         },
         loadFormRegister: function(){
+            console.log('-----methods loadFormRegister----')
             this.isNew = !this.isNew;
         },
         removeItem: function(payload) {
-          let temp = null;
-          this.tasks.forEach((i, index) => {
-              if(i.id === payload) {
-                  temp = index;
-              }
-          });
-          this.tasks.splice(temp, 1);
+            let temp = null;
+            this.tasks.forEach((i, index) => {
+                if(i.id === payload) {
+                    temp = index;
+                }
+            });
+            this.tasks.splice(temp, 1);
+            socket.emit('deleteTask', payload);
         },
         updateItem: function(payload) {
             this.tasks.forEach(i => {
@@ -290,17 +298,53 @@ export default {
                   i.category = payload.category;
                 }
             })
+            socket.emit('updateTask', payload);
         }
     },
+    beforeCreate() {
+        console.log('-----before create----')
+    },
     created() {
+        console.log('-----created----')
         // this.getTaks();
         if (localStorage.getItem('access_token')) {
             this.isLogin = !this.isLogin;
             this.UserId = localStorage.getItem('id');
             this.getTasks();
+
+            socket.on('createTask', (payload) => {
+                console.log('ini dari user sebelah', payload);
+                this.tasks.push(payload);
+            })
+
+            socket.on('deleteTask', (id) => {
+                console.log('ini dari user sebelah', id);
+                let temp = null;
+                this.tasks.forEach((i, index) => {
+                    if(i.id === id) {
+                        temp = index;
+                    }
+                });
+                this.tasks.splice(temp, 1);
+            })
+
+            socket.on('updateTask', (payload) => {
+                console.log('ini dari user sebelah', payload);
+                this.tasks.forEach(i => {
+                    if(i.id === payload.id) {
+                        i.title = payload.title;
+                        i.category = payload.category;
+                    }
+                })
+            })
         }
+        
+    },
+    beforeMount() {
+        console.log('-----before mount----')
     },
     mounted() {
+        console.log('----- mount----')
         let that = this
         let checkGauthLoad = setInterval(function(){
         that.isInit = that.$gAuth.isInit
@@ -308,15 +352,34 @@ export default {
         if(that.isInit) clearInterval(checkGauthLoad)
         }, 1000);
     },
+    beforeUpdate() {
+        console.log('-----before update----')
+    },
+    updated() {
+        console.log('-----updated----')
+    },
+    beforeDestroy() {
+        console.log('-----before destroy----')
+    },
+    destroyed() {
+        console.log('-----destroy----')
+    },
     watch: {
         isLogin: function(val, oldVal) {
+            console.log('-----watch isLogin----')
             if (localStorage.getItem('access_token')) {
                 this.isLogin = true;
                 this.getTasks();
             } else {
                 this.isLogin = false;
             }
-        }
+        },
+        // tasks: function(val, oldVal) {
+        //     console.log('-----watch tasks----')
+        //     if(val !== oldVal) {
+        //         socket.emit('changeTask', this.tasks);
+        //     }
+        // }
     }
 };
 </script>
