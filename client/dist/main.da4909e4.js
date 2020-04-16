@@ -8549,8 +8549,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.url = void 0;
-// export const url = "https://lit-dawn-18982.herokuapp.com";
-var url = "http://localhost:3000";
+var url = "https://lit-dawn-18982.herokuapp.com"; // export const url = "http://localhost:3000";
+
 exports.url = url;
 },{}],"../node_modules/vue-hot-reload-api/dist/index.js":[function(require,module,exports) {
 var Vue // late bind
@@ -19569,7 +19569,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42421" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45633" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
