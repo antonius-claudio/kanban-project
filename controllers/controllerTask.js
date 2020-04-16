@@ -72,11 +72,9 @@ class controllerTask {
             // res.status(201).json(data);
         })
         .then((result) => {
-            console.log('masuk sini', result)
             res.status(201).json(result);
         })
         .catch((err) => {
-            console.log(err)
             next(err);
         });
     }
@@ -122,7 +120,6 @@ class controllerTask {
                 res.status(200).json(result);
             })
             .catch((err) => {
-                console.log(err)
                 next(err);
             });
         }

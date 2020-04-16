@@ -5,7 +5,7 @@ const http = require('http').createServer(app);
 const port = process.env.PORT || 3000;
 const cors = require('cors');
 const router = require('./routes');
-const io = require('socket.io')(http);
+let io = require('socket.io')(http);
 
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
@@ -15,15 +15,25 @@ console.log(process.env.client_id_oauth_google);
 app.use(cors());
 app.use(router);
 
-// io.on('connection', function() {
-    //     console.log('there is a connection');
-    // })
 io.on('connection', function (socket) {
-    socket.emit('news', { hello: 'world' });
-    socket.on('my other event', function (data) {
-      console.log(data);
-    });
+    console.log('user connected');
+    socket.on('createTask', function (payload) {
+        console.log('createeee', payload);
+        socket.broadcast.emit('createTask', payload);
+    })
+    socket.on('deleteTask', function (id) {
+        console.log('deleeetee', id);
+        socket.broadcast.emit('deleteTask', id);
+    })
+    socket.on('updateTask', function (payload) {
+        console.log('updateee', payload);
+        socket.broadcast.emit('updateTask', payload);
+    })
+    socket.on('disconnect', function () {
+        console.log('user disconnected');
+    })
 });
+
 http.listen(port, () => {
     console.log('listening port ', port);
 })
