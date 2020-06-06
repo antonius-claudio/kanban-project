@@ -95,7 +95,7 @@ export default {
       nameRegister: '',
       emailRegister: '',
       passwordRegister: '',
-      categories: ['Backlog', 'Todo', 'Done', 'Completed'],
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
       tasks: [],
       showDiv: false,
       isInit: false,

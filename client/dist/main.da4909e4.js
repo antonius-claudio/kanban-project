@@ -8549,8 +8549,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.url = void 0;
-var url = "https://lit-dawn-18982.herokuapp.com"; // export const url = "http://localhost:3000";
-
+// export const url = "https://lit-dawn-18982.herokuapp.com";
+var url = "http://localhost:3000";
 exports.url = url;
 },{}],"../node_modules/vue-hot-reload-api/dist/index.js":[function(require,module,exports) {
 var Vue // late bind
@@ -8995,70 +8995,73 @@ var _default = {
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Yes, delete it!'
-      }).then(function (result) {
-        if (result.value) {
-          axios({
-            url: _utils.url + "/tasks/".concat(_this3.task.id),
-            method: 'DELETE',
-            headers: {
-              access_token: localStorage.getItem('access_token')
-            }
-          }).then(function (response) {
-            _this3.$emit('itemRemove', _this3.task.id);
-
-            Swal.fire('Deleted!', "".concat(response.data.message), 'success');
-          }).catch(function (err) {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: err.response.data.message,
-              showClass: {
-                popup: 'animated fadeInDown faster'
-              },
-              hideClass: {
-                popup: 'animated fadeOutUp faster'
-              }
-            });
-          });
-        }
-      }); // .then((result) => {
+      }) // .then((result) => {
       //     if (result.value) {
-      //         return axios({
-      //             url: url + `/tasks/${id}`,
+      //         axios({
+      //             url: url + `/tasks/${this.task.id}`,
       //             method: 'DELETE',
       //             headers: {
       //                 access_token: localStorage.getItem('access_token')
       //             }
       //         })
+      //         .then((response) => {
+      //             this.$emit('itemRemove', this.task.id);
+      //             Swal.fire(
+      //                 'Deleted!',
+      //                 `${response.data.message}`,
+      //                 'success'
+      //             )
+      //         })
+      //         .catch((err) => {
+      //             Swal.fire({
+      //                 icon: 'error',
+      //                 title: 'Oops...',
+      //                 text: err.response.data.message,
+      //                 showClass: {
+      //                   popup: 'animated fadeInDown faster'
+      //                 },
+      //                 hideClass: {
+      //                   popup: 'animated fadeOutUp faster'
+      //                 }
+      //             })
+      //         })
       //     }
       // })
-      // .then((response) => {
-      //     let temp = null;
-      //     this.tasks.forEach((i, index) => {
-      //         if(i.id === id) {
-      //             temp = index;
-      //         }
-      //     });
-      //     this.tasks.splice(temp, 1);
-      //     Swal.fire(
-      //         'Deleted!',
-      //         `${response.data.message}`,
-      //         'success'
-      //     )
-      // })
-      // .catch((err) => {
-      //     Swal.fire({
-      //         icon: 'error',
-      //         title: 'Oops...',
-      //         text: err.response.data.message,
-      //         showClass: {
-      //           popup: 'animated fadeInDown faster'
-      //         },
-      //         hideClass: {
-      //           popup: 'animated fadeOutUp faster'
-      //         }
-      //     })
-      // })
+      .then(function (result) {
+        if (result.value) {
+          console.log();
+          return axios({
+            url: _utils.url + "/tasks/".concat(_this3.task.id),
+            method: 'DELETE',
+            headers: {
+              access_token: localStorage.getItem('access_token')
+            }
+          });
+        } else {
+          return false;
+        }
+      }).then(function (response) {
+        console.log('masuk response axios', response);
+
+        if (response) {
+          _this3.$emit('itemRemove', _this3.task.id);
+
+          Swal.fire('Deleted!', "".concat(response.data.message), 'success');
+        }
+      }).catch(function (err) {
+        console.log('masuk error axios', err);
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: err.response.data.message,
+          showClass: {
+            popup: 'animated fadeInDown faster'
+          },
+          hideClass: {
+            popup: 'animated fadeOutUp faster'
+          }
+        });
+      });
     }
   }
 };
@@ -19569,7 +19572,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45633" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45773" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

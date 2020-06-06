@@ -161,76 +161,77 @@ export default {
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!'
             })
+            // .then((result) => {
+            //     if (result.value) {
+            //         axios({
+            //             url: url + `/tasks/${this.task.id}`,
+            //             method: 'DELETE',
+            //             headers: {
+            //                 access_token: localStorage.getItem('access_token')
+            //             }
+            //         })
+            //         .then((response) => {
+            //             this.$emit('itemRemove', this.task.id);
+            //             Swal.fire(
+            //                 'Deleted!',
+            //                 `${response.data.message}`,
+            //                 'success'
+            //             )
+            //         })
+            //         .catch((err) => {
+            //             Swal.fire({
+            //                 icon: 'error',
+            //                 title: 'Oops...',
+            //                 text: err.response.data.message,
+            //                 showClass: {
+            //                   popup: 'animated fadeInDown faster'
+            //                 },
+            //                 hideClass: {
+            //                   popup: 'animated fadeOutUp faster'
+            //                 }
+            //             })
+            //         })
+            //     }
+            // })
             .then((result) => {
                 if (result.value) {
-                    axios({
+                    console.log()
+                    return axios({
                         url: url + `/tasks/${this.task.id}`,
                         method: 'DELETE',
                         headers: {
                             access_token: localStorage.getItem('access_token')
                         }
                     })
-                    .then((response) => {
-                        this.$emit('itemRemove', this.task.id);
-                        Swal.fire(
-                            'Deleted!',
-                            `${response.data.message}`,
-                            'success'
-                        )
-                    })
-                    .catch((err) => {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: err.response.data.message,
-                            showClass: {
-                              popup: 'animated fadeInDown faster'
-                            },
-                            hideClass: {
-                              popup: 'animated fadeOutUp faster'
-                            }
-                        })
-                    })
+                } else {
+                    return false;
                 }
             })
-            // .then((result) => {
-            //     if (result.value) {
-            //         return axios({
-            //             url: url + `/tasks/${id}`,
-            //             method: 'DELETE',
-            //             headers: {
-            //                 access_token: localStorage.getItem('access_token')
-            //             }
-            //         })
-            //     }
-            // })
-            // .then((response) => {
-            //     let temp = null;
-            //     this.tasks.forEach((i, index) => {
-            //         if(i.id === id) {
-            //             temp = index;
-            //         }
-            //     });
-            //     this.tasks.splice(temp, 1);
-            //     Swal.fire(
-            //         'Deleted!',
-            //         `${response.data.message}`,
-            //         'success'
-            //     )
-            // })
-            // .catch((err) => {
-            //     Swal.fire({
-            //         icon: 'error',
-            //         title: 'Oops...',
-            //         text: err.response.data.message,
-            //         showClass: {
-            //           popup: 'animated fadeInDown faster'
-            //         },
-            //         hideClass: {
-            //           popup: 'animated fadeOutUp faster'
-            //         }
-            //     })
-            // })
+            .then((response) => {
+                console.log('masuk response axios', response);
+                if(response){
+                    this.$emit('itemRemove', this.task.id);
+                    Swal.fire(
+                        'Deleted!',
+                        `${response.data.message}`,
+                        'success'
+                    )
+                }
+            })
+            .catch((err) => {
+                console.log('masuk error axios', err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: err.response.data.message,
+                    showClass: {
+                      popup: 'animated fadeInDown faster'
+                    },
+                    hideClass: {
+                      popup: 'animated fadeOutUp faster'
+                    }
+                })
+            })
         }
     }
 }
