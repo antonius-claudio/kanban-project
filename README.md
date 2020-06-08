@@ -1,5 +1,10 @@
 # Kanban
 ---
+## Demo 
+
+Client : https://kaban-31455.web.app/
+
+Server : https://lit-dawn-18982.herokuapp.com/
 
 ## POST /register
 > create new user
